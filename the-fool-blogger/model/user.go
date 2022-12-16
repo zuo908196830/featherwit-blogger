@@ -2,7 +2,7 @@ package model
 
 import "time"
 
-type user struct {
+type User struct {
 	ID       string    `json:"id" xorm:"varchar(50) not null pk id autoincr"`
 	Username string    `json:"userName" xorm:"varchar(45) 'username'"`
 	Password string    `json:"password" xorm:"varchar(45) 'password'"`
@@ -11,6 +11,6 @@ type user struct {
 	Role     int       `json:"role" xorm:"int"`
 }
 
-func (u *user) TableName() string {
+func (u *User) TableName() string {
 	return "users"
 }

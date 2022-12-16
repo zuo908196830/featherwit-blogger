@@ -2,6 +2,7 @@ package global
 
 import (
 	"log"
+	"the-fool-blogger/model"
 	"xorm.io/xorm"
 )
 
@@ -15,5 +16,13 @@ func NewDbEngine() {
 		log.Fatalf("init db failed, err:%v", err)
 	} else {
 		DbEngine = db
+	}
+}
+
+func InitDbEngine() {
+	if has, err := DbEngine.IsTableExist(new(model.User)); err != nil {
+		log.Fatalf("create table error:%v", err)
+	} else if !has {
+		DbEngine.CreateTables(new(model.User))
 	}
 }
