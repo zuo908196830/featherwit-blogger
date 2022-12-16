@@ -1,29 +1,29 @@
 package response
 
 import (
-	"dianping/model/errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"the-fool-blogger/model/errors"
 )
 
 type OkResponse struct {
-	RequestId string `json:"-"`
-	Code int `json:"code"`
-	Data interface{} `json:"data"`
+	RequestId string      `json:"-"`
+	Code      int         `json:"code"`
+	Data      interface{} `json:"data"`
 }
 
 type Error struct {
-	Message string `json:"message"`
-	Detail interface{} `json:"detail"`
+	Message string      `json:"message"`
+	Detail  interface{} `json:"detail"`
 }
 
 type ErrorResponse struct {
 	RequestId string `json:"-"`
-	Code int `json:"code"`
-	Error Error `json:"error"`
+	Code      int    `json:"code"`
+	Error     Error  `json:"error"`
 }
 
-func BuildOkResponse(code int, data interface{}, c *gin.Context)  {
+func BuildOkResponse(code int, data interface{}, c *gin.Context) {
 	c.JSON(code, OkResponse{
 		RequestId: c.Request.Header.Get("Request-Id"),
 		Code:      0,
@@ -31,7 +31,7 @@ func BuildOkResponse(code int, data interface{}, c *gin.Context)  {
 	})
 }
 
-func BuildErrorResult(code int, msg string, detail interface{}, c *gin.Context)  {
+func BuildErrorResult(code int, msg string, detail interface{}, c *gin.Context) {
 	err := Error{
 		Message: msg,
 		Detail:  detail,
@@ -47,7 +47,7 @@ func BuildErrorResult(code int, msg string, detail interface{}, c *gin.Context) 
 	})
 }
 
-func BuildErrorResponse(e error, c *gin.Context)  {
+func BuildErrorResponse(e error, c *gin.Context) {
 	if e == nil {
 		BuildErrorResult(http.StatusInternalServerError, "insternal server error", "", c)
 	} else if err, ok := e.(*errors.Error); ok {
