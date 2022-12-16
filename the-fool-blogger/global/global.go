@@ -20,9 +20,13 @@ func NewDbEngine() {
 }
 
 func InitDbEngine() {
-	if has, err := DbEngine.IsTableExist(new(model.User)); err != nil {
+	//if has, err := DbEngine.IsTableExist(new(model.User)); err != nil {
+	//	log.Fatalf("create table error:%v", err)
+	//} else if !has {
+	//	DbEngine.CreateTables(new(model.User))
+	//}
+	err := DbEngine.Sync2(new(model.User))
+	if err != nil {
 		log.Fatalf("create table error:%v", err)
-	} else if !has {
-		DbEngine.CreateTables(new(model.User))
 	}
 }
