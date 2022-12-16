@@ -16,7 +16,6 @@ func Init() *gin.Engine {
 	outRouter := Router.Group("")
 	{
 		RouterGroupApp.systemRouter.InitShopTypeRouter(outRouter)
-		RouterGroupApp.systemRouter.InitShopRouter(outRouter)
 	}
 	return Router
 }
