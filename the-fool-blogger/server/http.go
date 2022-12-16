@@ -10,7 +10,7 @@ import (
 )
 
 type HttpServer struct {
-	port int32
+	port   int32
 	server *http.Server
 }
 
@@ -23,10 +23,10 @@ func NewHttpServer(Router *gin.Engine) *HttpServer {
 	if httpServer != nil {
 		return httpServer
 	}
-	port := "8080"
+	port := int32(8080)
 	once.Do(func() {
 		httpServer = &HttpServer{
-			port: 8081,
+			port: port,
 			server: &http.Server{
 				Addr:           fmt.Sprintf(":%d", port),
 				Handler:        Router,
@@ -37,7 +37,7 @@ func NewHttpServer(Router *gin.Engine) *HttpServer {
 	return httpServer
 }
 
-func (hs *HttpServer) Start()  {
+func (hs *HttpServer) Start() {
 	go func() {
 		if err := hs.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Server start error: %s\n", err)
