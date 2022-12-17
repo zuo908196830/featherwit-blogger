@@ -20,6 +20,7 @@ var ErrorMap map[ErrorCode]string
 func init() {
 	ErrorMap = make(map[ErrorCode]string)
 	{
+		ErrorMap[Unauthorized] = "unauthorized"
 		ErrorMap[ResourceNotExist] = "resource not exist"
 		ErrorMap[ResourceAlreadyExist] = "resource already exist"
 	}
