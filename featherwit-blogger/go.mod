@@ -1,4 +1,4 @@
-module the-fool-blogger
+module featherwit-blogger
 
 go 1.19
 

@@ -1,8 +1,8 @@
 package system
 
 import (
+	"featherwit-blogger/api"
 	"github.com/gin-gonic/gin"
-	"the-fool-blogger/api"
 )
 
 type UserRouter struct{}

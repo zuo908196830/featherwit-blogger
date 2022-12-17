@@ -1,6 +1,6 @@
 package system
 
-import "the-fool-blogger/service"
+import "featherwit-blogger/service"
 
 type ApiGroup struct {
 	UserApi

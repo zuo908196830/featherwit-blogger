@@ -1,6 +1,6 @@
 package api
 
-import "the-fool-blogger/api/system"
+import "featherwit-blogger/api/system"
 
 type ApiGroup struct {
 	SystemApiGroup system.ApiGroup

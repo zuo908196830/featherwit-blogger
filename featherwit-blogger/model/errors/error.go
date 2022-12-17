@@ -6,8 +6,8 @@ import (
 )
 
 type Error struct {
-	Code ErrorCode
-	Msg string
+	Code   ErrorCode
+	Msg    string
 	Detail interface{}
 }
 

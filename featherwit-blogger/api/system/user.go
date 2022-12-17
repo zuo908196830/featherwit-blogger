@@ -1,8 +1,8 @@
 package system
 
 import (
+	"featherwit-blogger/model/response"
 	"github.com/gin-gonic/gin"
-	"the-fool-blogger/model/response"
 )
 
 type UserApi struct{}

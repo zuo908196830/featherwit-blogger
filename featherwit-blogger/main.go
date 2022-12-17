@@ -1,13 +1,13 @@
 package main
 
 import (
+	"featherwit-blogger/global"
+	"featherwit-blogger/router"
+	"featherwit-blogger/server"
 	_ "github.com/go-sql-driver/mysql"
 	"os"
 	"os/signal"
 	"syscall"
-	"the-fool-blogger/global"
-	"the-fool-blogger/router"
-	"the-fool-blogger/server"
 )
 
 func main() {

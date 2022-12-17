@@ -1,8 +1,8 @@
 package router
 
 import (
+	"featherwit-blogger/router/system"
 	"github.com/gin-gonic/gin"
-	"the-fool-blogger/router/system"
 )
 
 type Routers struct {

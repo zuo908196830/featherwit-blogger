@@ -1,8 +1,8 @@
 package global
 
 import (
+	"featherwit-blogger/model"
 	"log"
-	"the-fool-blogger/model"
 	"xorm.io/xorm"
 )
 
