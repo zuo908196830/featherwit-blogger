@@ -1,5 +1,11 @@
 package system
 
+import "the-fool-blogger/service"
+
 type ApiGroup struct {
-	ShopTypeApi
+	UserApi
 }
+
+var (
+	UserService = new(service.UserService)
+)

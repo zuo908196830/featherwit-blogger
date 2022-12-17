@@ -13,9 +13,9 @@ var RouterGroupApp = new(Routers)
 
 func Init() *gin.Engine {
 	Router := gin.New()
-	outRouter := Router.Group("")
+	outRouter := Router.Group("api")
 	{
-		RouterGroupApp.systemRouter.InitShopTypeRouter(outRouter)
+		RouterGroupApp.systemRouter.InitUserRouter(outRouter)
 	}
 	return Router
 }
