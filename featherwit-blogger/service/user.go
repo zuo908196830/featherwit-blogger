@@ -3,14 +3,9 @@ package service
 import (
 	"featherwit-blogger/global"
 	"featherwit-blogger/model"
-	"fmt"
 )
 
 type UserService struct{}
-
-func (u *UserService) Login() {
-	fmt.Println("in service login")
-}
 
 func (u *UserService) GetUserByUsername(username string) (*model.User, error) {
 	user := new(model.User)

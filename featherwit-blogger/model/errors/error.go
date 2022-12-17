@@ -24,6 +24,7 @@ func init() {
 		ErrorMap[ResourceNotExist] = "resource not exist"
 		ErrorMap[ResourceAlreadyExist] = "resource already exist"
 		ErrorMap[BadRequest] = "bad request"
+		ErrorMap[PasswordWrong] = "password wrong"
 	}
 }
 

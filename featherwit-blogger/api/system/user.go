@@ -12,8 +12,40 @@ import (
 type UserApi struct{}
 
 func (u *UserApi) Login(c *gin.Context) {
-	UserService.Login()
-	response.BuildOkResponse(0, "login", c)
+	var login request.Login
+	if err := c.ShouldBindJSON(&login); err != nil {
+		log.Printf("bind request param error: %v", err)
+		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
+		return
+	}
+	user, err := UserService.GetUserByUsername(login.Username)
+	if err != nil {
+		log.Printf("get user error: %v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	} else if user == nil {
+		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "username not exist"), c)
+		return
+	}
+	if user.Password != login.Password {
+		response.BuildErrorResponse(errors.NewError(errors.PasswordWrong, nil), c)
+		return
+	}
+	if user.Role == 0 {
+		//todo 生成管理员token
+		response.BuildOkResponse(0, response.Login{
+			Username: user.Username,
+			Nickname: user.Nickname,
+			Token:    "0000",
+		}, c)
+	} else if user.Role == 1 {
+		//todo 生成普通用户token
+		response.BuildOkResponse(0, response.Login{
+			Username: user.Username,
+			Nickname: user.Nickname,
+			Token:    "0000",
+		}, c)
+	}
 }
 
 func (u *UserApi) Register(c *gin.Context) {
