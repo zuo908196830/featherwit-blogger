@@ -12,5 +12,6 @@ func (u *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 	UserApi := api.ApiGroupApp.SystemApiGroup.UserApi
 	{
 		userRouter.POST("login", UserApi.Login)
+		userRouter.POST("register", UserApi.Register)
 	}
 }

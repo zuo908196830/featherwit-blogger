@@ -6,4 +6,5 @@ const (
 	Unauthorized         ErrorCode = 403
 	ResourceNotExist     ErrorCode = 1001
 	ResourceAlreadyExist ErrorCode = 1002
+	BadRequest           ErrorCode = 1003
 )
