@@ -9,6 +9,7 @@ type User struct {
 	CreateAt time.Time `json:"createAt" xorm:"created"`
 	UpdateAt time.Time `json:"updateAt" xorm:"updated"`
 	Role     int       `json:"role" xorm:"int"`
+	Nickname string    `json:"nickname" xorm:"varchar(50)"`
 }
 
 func (u *User) TableName() string {
