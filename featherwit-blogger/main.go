@@ -11,8 +11,7 @@ import (
 )
 
 func main() {
-	global.NewDbEngine()
-	global.InitDbEngine()
+	global.InitGlobal()
 	server := server.NewHttpServer(router.Init())
 	server.Start()
 	quit := make(chan os.Signal)

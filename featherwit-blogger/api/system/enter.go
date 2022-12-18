@@ -7,5 +7,6 @@ type ApiGroup struct {
 }
 
 var (
-	UserService = new(service.UserService)
+	CommonService = new(service.CommonService)
+	UserService   = new(service.UserService)
 )

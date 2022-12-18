@@ -31,6 +31,18 @@ func (u *UserApi) Login(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.PasswordWrong, nil), c)
 		return
 	}
+	err = CommonService.RedisSet(user.Username, user.Role)
+	if err != nil {
+		log.Printf("set session error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	err = CommonService.RedisSetTime(user.Username, 1800)
+	if err != nil {
+		log.Printf("set session error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	}
 	if user.Role == 0 {
 		//todo 生成管理员token
 		response.BuildOkResponse(0, response.Login{
