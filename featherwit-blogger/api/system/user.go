@@ -5,6 +5,7 @@ import (
 	"featherwit-blogger/model/errors"
 	"featherwit-blogger/model/request"
 	"featherwit-blogger/model/response"
+	"featherwit-blogger/utils"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -43,21 +44,25 @@ func (u *UserApi) Login(c *gin.Context) {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	if user.Role == 0 {
-		//todo 生成管理员token
-		response.BuildOkResponse(0, response.Login{
-			Username: user.Username,
-			Nickname: user.Nickname,
-			Token:    "0000",
-		}, c)
-	} else if user.Role == 1 {
-		//todo 生成普通用户token
-		response.BuildOkResponse(0, response.Login{
-			Username: user.Username,
-			Nickname: user.Nickname,
-			Token:    "0000",
-		}, c)
+	mp := make(map[string]interface{})
+	mp["username"] = user.Username
+	mp["role"] = user.Role
+	mp["nickname"] = user.Nickname
+	token, err := utils.NewToken(mp)
+	if err != nil {
+		log.Printf("create token error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
 	}
+	response.BuildOkResponse(0, response.Login{
+		Username: user.Username,
+		Nickname: user.Nickname,
+		Token:    token,
+	}, c)
+}
+
+func (u *UserApi) Logout(c *gin.Context) {
+	//todo 解析token，将redis中的对应记录删除，返回ok信息
 }
 
 func (u *UserApi) Register(c *gin.Context) {
@@ -87,5 +92,31 @@ func (u *UserApi) Register(c *gin.Context) {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	response.BuildOkResponse(0, nil, c)
+	err = CommonService.RedisSet(register.Username, register.Role)
+	if err != nil {
+		log.Printf("set session error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	err = CommonService.RedisSetTime(register.Username, 1800)
+	if err != nil {
+		log.Printf("set session error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	mp := make(map[string]interface{})
+	mp["username"] = register.Username
+	mp["role"] = register.Role
+	mp["nickname"] = register.Nickname
+	token, err := utils.NewToken(mp)
+	if err != nil {
+		log.Printf("create token error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	response.BuildOkResponse(0, response.Login{
+		Username: register.Username,
+		Nickname: register.Nickname,
+		Token:    token,
+	}, c)
 }
