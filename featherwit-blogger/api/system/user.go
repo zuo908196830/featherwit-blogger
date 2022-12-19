@@ -50,7 +50,6 @@ func (u *UserApi) Login(c *gin.Context) {
 	mp["nickname"] = user.Nickname
 	token, err := utils.NewToken(mp)
 	if err != nil {
-		log.Printf("create token error:%v", err)
 		response.BuildErrorResponse(err, c)
 		return
 	}
@@ -63,6 +62,19 @@ func (u *UserApi) Login(c *gin.Context) {
 
 func (u *UserApi) Logout(c *gin.Context) {
 	//todo 解析token，将redis中的对应记录删除，返回ok信息
+	token := c.GetHeader("User-Info")
+	tkmp, err := utils.ParseToken(token)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	username, ok := tkmp["username"]
+	if !ok {
+		response.BuildErrorResponse(errors.NewError(errors.TokenWrong, nil), c)
+		return
+	}
+	CommonService.RedisDelete(username.(string))
+	response.BuildOkResponse(0, nil, c)
 }
 
 func (u *UserApi) Register(c *gin.Context) {

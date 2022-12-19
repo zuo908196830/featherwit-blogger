@@ -25,6 +25,7 @@ func init() {
 		ErrorMap[ResourceAlreadyExist] = "resource already exist"
 		ErrorMap[BadRequest] = "bad request"
 		ErrorMap[PasswordWrong] = "password wrong"
+		ErrorMap[TokenWrong] = "token wrong"
 	}
 }
 

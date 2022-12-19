@@ -51,3 +51,12 @@ func (c *CommonService) RedisGet(key string) (interface{}, error) {
 	}
 	return val, nil
 }
+
+func (c *CommonService) RedisDelete(key string) error {
+	_, err := global.RedisConn.Do("del", key)
+	if err != nil {
+		log.Printf("redis delete error: %v", err)
+		return err
+	}
+	return nil
+}

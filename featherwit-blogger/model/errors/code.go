@@ -8,4 +8,5 @@ const (
 	ResourceAlreadyExist ErrorCode = 1002
 	BadRequest           ErrorCode = 1003
 	PasswordWrong        ErrorCode = 1004
+	TokenWrong           ErrorCode = 1005
 )
