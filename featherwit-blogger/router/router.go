@@ -16,6 +16,7 @@ func Init() *gin.Engine {
 	outRouter := Router.Group("api")
 	{
 		RouterGroupApp.systemRouter.InitUserRouter(outRouter)
+		RouterGroupApp.systemRouter.InitBlogRouter(outRouter)
 	}
 	return Router
 }
