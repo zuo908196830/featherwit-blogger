@@ -5,7 +5,6 @@ import (
 	"featherwit-blogger/model/errors"
 	"featherwit-blogger/model/request"
 	"featherwit-blogger/model/response"
-	"featherwit-blogger/utils"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -13,23 +12,14 @@ import (
 type BlogApi struct{}
 
 func (b *BlogApi) AddBlog(c *gin.Context) {
-	token := c.GetHeader("User-Info")
-	if token == "" {
-		log.Printf("token is not exist")
-		response.BuildErrorResponse(errors.NewError(errors.Unauthorized, "token is not exist"), c)
-		return
-	}
 	var param request.BlogRequest
 	if err := c.ShouldBindJSON(&param); err != nil {
 		log.Printf("bad request error:%v", err)
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
 		return
 	}
-	tkmp, err := utils.ParseToken(token)
-	if err != nil {
-		response.BuildErrorResponse(err, c)
-		return
-	}
+	get, _ := c.Get("User-Info")
+	tkmp := get.(map[string]interface{})
 	username, ok := tkmp["username"].(string)
 	user, err := UserService.GetUserByUsername(username)
 	if err != nil {

@@ -1,6 +1,7 @@
 package router
 
 import (
+	middle_ware "featherwit-blogger/middle-ware"
 	"featherwit-blogger/router/system"
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +14,7 @@ var RouterGroupApp = new(Routers)
 
 func Init() *gin.Engine {
 	Router := gin.New()
+	Router.Use(middle_ware.TokenMiddleWare())
 	outRouter := Router.Group("api")
 	{
 		RouterGroupApp.systemRouter.InitUserRouter(outRouter)

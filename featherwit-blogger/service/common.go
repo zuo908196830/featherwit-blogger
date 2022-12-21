@@ -8,6 +8,8 @@ import (
 
 type CommonService struct{}
 
+var CommonServiceApp = new(CommonService)
+
 func (c *CommonService) RedisSet(key string, val interface{}) error {
 	_, ok1 := val.(string)
 	_, ok2 := val.(int)
