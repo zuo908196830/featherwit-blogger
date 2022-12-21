@@ -18,3 +18,24 @@ func (b *BlogService) AddBlog(blog *model.Blob) error {
 	}
 	return nil
 }
+
+func (b *BlogService) SearchBlog(limit int, offset int) ([]*model.Blob, error) {
+	blogs := make([]*model.Blob, 0)
+	err := global.DbEngine.Cols("id", "username", "create_at", "update_at", "title", "views", "common_count", "like_count").Limit(limit, offset).Find(&blogs)
+	if err != nil {
+		log.Printf("search blog error: %v", err)
+		return nil, err
+	}
+	return blogs, nil
+}
+
+func (b *BlogService) GetBlogById(id int) (*model.Blob, error) {
+	blog := &model.Blob{ID: id}
+	ok, err := global.DbEngine.Get(blog)
+	if err != nil {
+		return nil, err
+	} else if !ok {
+		return nil, nil
+	}
+	return blog, nil
+}

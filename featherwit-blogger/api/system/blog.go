@@ -65,3 +65,39 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 		UpdateAt: blog.UpdateAt,
 	}, c)
 }
+
+func (b *BlogApi) SearchBlog(c *gin.Context) {
+	var param request.SearchBlogRequest
+	if err := c.ShouldBindUri(&param); err != nil {
+		log.Printf("bind uri error:%v", err)
+		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
+		return
+	}
+	blogs, err := BlogService.SearchBlog(param.Limit, param.Offset)
+	if err != nil {
+		log.Printf("search blog error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	response.BuildOkResponse(0, blogs, c)
+}
+
+func (b *BlogApi) GetBlogById(c *gin.Context) {
+	var bid request.BlogIdRequest
+	if err := c.ShouldBindUri(&bid); err != nil {
+		log.Printf("bind uri error:%v", err)
+		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
+		return
+	}
+	blog, err := BlogService.GetBlogById(bid.ID)
+	if err != nil {
+		log.Printf("select by id error: %v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	} else if blog == nil {
+		log.Printf("blog is not exist")
+		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "blog is not exist"), c)
+		return
+	}
+	response.BuildOkResponse(0, blog, c)
+}
