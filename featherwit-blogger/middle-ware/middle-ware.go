@@ -47,3 +47,21 @@ func ConsumerToken() gin.HandlerFunc {
 		}
 	}
 }
+
+func AdministratorsToken() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		get, _ := c.Get("User-Info")
+		tkmp := get.(map[string]interface{})
+		role, err := service.CommonServiceApp.RedisGet(tkmp["username"].(string))
+		if err != nil {
+			response.BuildErrorResponse(err, c)
+			c.Abort()
+			return
+		} else if role != 1 {
+			response.BuildErrorResponse(errors.NewError(errors.Unauthorized, nil), c)
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}

@@ -46,7 +46,6 @@ func (u *UserApi) Login(c *gin.Context) {
 	}
 	mp := make(map[string]interface{})
 	mp["username"] = user.Username
-	mp["role"] = user.Role
 	mp["nickname"] = user.Nickname
 	token, err := utils.NewToken(mp)
 	if err != nil {
@@ -109,7 +108,6 @@ func (u *UserApi) Register(c *gin.Context) {
 	}
 	mp := make(map[string]interface{})
 	mp["username"] = register.Username
-	mp["role"] = register.Role
 	mp["nickname"] = register.Nickname
 	token, err := utils.NewToken(mp)
 	if err != nil {
