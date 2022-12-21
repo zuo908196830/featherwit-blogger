@@ -59,5 +59,9 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	response.BuildOkResponse(0, nil, c)
+	response.BuildOkResponse(0, response.AddBlogResponse{
+		ID:       blog.ID,
+		CreateAt: blog.CreateAt,
+		UpdateAt: blog.UpdateAt,
+	}, c)
 }

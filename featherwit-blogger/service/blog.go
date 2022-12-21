@@ -8,6 +8,8 @@ import (
 
 type BlogService struct{}
 
+var BlogServiceApp = new(BlogService)
+
 func (b *BlogService) AddBlog(blog *model.Blob) error {
 	_, err := global.DbEngine.Insert(blog)
 	if err != nil {
