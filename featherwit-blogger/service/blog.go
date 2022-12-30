@@ -39,3 +39,19 @@ func (b *BlogService) GetBlogById(id int) (*model.Blob, error) {
 	}
 	return blog, nil
 }
+
+func (b *BlogService) BlogExist(id int, username string) (bool, error) {
+	exist, err := global.DbEngine.Exist(&model.Blob{ID: id, Username: username})
+	if err != nil {
+		return false, err
+	}
+	return exist, err
+}
+
+func (b *BlogService) UpdateBlog(blog *model.Blob) error {
+	_, err := global.DbEngine.Where("id = ?", blog.ID).Update(blog)
+	if err != nil {
+		return err
+	}
+	return nil
+}

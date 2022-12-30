@@ -13,3 +13,9 @@ type SearchBlogRequest struct {
 type BlogIdRequest struct {
 	ID int `json:"id" uri:"id"`
 }
+
+type UpdateBlogRequest struct {
+	ID      int    `json:"id" bind:"required"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
+}

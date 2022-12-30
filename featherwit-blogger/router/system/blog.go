@@ -15,5 +15,6 @@ func (b *BlogRouter) InitBlogRouter(Router *gin.RouterGroup) {
 		blogRouter.POST("add", middle_ware.ConsumerToken(), blogApi.AddBlog)
 		blogRouter.GET("/:limit/:offset", blogApi.SearchBlog)
 		blogRouter.GET("id/:id", blogApi.GetBlogById)
+		blogRouter.PUT("update/:id", blogApi.UpdateBlog)
 	}
 }

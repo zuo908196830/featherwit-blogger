@@ -44,3 +44,12 @@ func TestBlogService_GetBlogById(t *testing.T) {
 	}
 	log.Printf("%v", blob)
 }
+
+func TestBlogService_BlogExist(t *testing.T) {
+	global.InitGlobal()
+	exist, err := BlogServiceApp.BlogExist(1, "xxx")
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	log.Println(exist)
+}

@@ -91,3 +91,36 @@ func (b *BlogApi) GetBlogById(c *gin.Context) {
 	}
 	response.BuildOkResponse(0, blog, c)
 }
+
+func (b *BlogApi) UpdateBlog(c *gin.Context) {
+	var param request.UpdateBlogRequest
+	if err := c.ShouldBindJSON(&param); err != nil {
+		log.Printf("bind update blog param error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	val, _ := c.Get("User-Info")
+	tkmp := val.(map[string]interface{})
+	username := tkmp["username"].(string)
+	exist, err := BlogService.BlogExist(param.ID, username)
+	if err != nil {
+		log.Printf("get blog error: %v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	} else if !exist {
+		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "blog is not exist"), c)
+		return
+	}
+	err = BlogService.UpdateBlog(&model.Blob{
+		ID:       param.ID,
+		Username: username,
+		Title:    param.Title,
+		Content:  param.Content,
+	})
+	if err != nil {
+		log.Printf("update blog error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	response.BuildOkResponse(0, nil, c)
+}
