@@ -14,7 +14,7 @@ var RouterGroupApp = new(Routers)
 
 func Init() *gin.Engine {
 	Router := gin.New()
-	Router.Use(middle_ware.TokenMiddleWare())
+	Router.Use(middle_ware.Cors(), middle_ware.TokenMiddleWare())
 	outRouter := Router.Group("api")
 	{
 		RouterGroupApp.systemRouter.InitUserRouter(outRouter)
