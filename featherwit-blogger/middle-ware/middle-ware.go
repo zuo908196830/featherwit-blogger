@@ -29,7 +29,7 @@ func Cors() gin.HandlerFunc {
 
 func TokenMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.GetHeader("User-Info")
+		token := c.GetHeader("Authorization")
 		if token == "" {
 			c.Next()
 		} else {

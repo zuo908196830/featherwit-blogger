@@ -1,9 +1,107 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
+      <el-header>
+        <nav>
+          <router-link to="/login" v-if="!loginStatus" class="user_show">登录/注册</router-link>
+
+          <!-- 登录后的用户展示界面 -->
+          <el-button v-if="loginStatus" @click="drawer = true" type="primary" style="margin-left: 16px;" class="user_show">
+            {{ username }}
+          </el-button>
+
+          <el-drawer
+            title="我是标题"
+            :visible.sync="drawer"
+            :with-header="false">
+            <div class="head_photo">
+              <div class="block">
+                <span class="demonstration"></span>
+                <el-image>
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture-outline"></i>
+                  </div>
+                </el-image>
+              </div>
+            </div>
+            <div>
+              <el-button
+              style="width:100%; height:40px"
+              >个人详情</el-button>
+            </div>
+            <div>
+              <el-button
+              style="width:100%; height:40px"
+              >收藏夹</el-button>
+            </div>
+            <div>
+              <el-button
+              style="width:100%; height:40px"
+              >历史记录</el-button>
+            </div>
+            <div>
+              <el-button
+              @click="logout"
+              style="width:100%; height:40px"
+              >退出</el-button>
+            </div>
+          </el-drawer>
+
+        </nav>
+      </el-header>
+      <router-view/>
   </div>
 </template>
+
+<script>
+import axios from 'axios'
+import config from '../config/config'
+export default{
+  data() {
+    return {
+      drawer: false,
+      username: "",
+      loginStatus: false
+    }
+  },
+  methods: {
+    logout(){
+      axios.get(config.host + "/api/user/logout").then(res => {
+        if (res.data.code === 0) {
+          localStorage.removeItem("user")
+          this.username = ""
+          this.loginStatus = false
+          this.drawer = false
+        }
+      })
+    }
+  },
+  watch: {
+    "$route.path" :function(){      //监视每次router的变化
+      this.username = localStorage.getItem("user")
+      if (this.username != null) {
+        this.loginStatus = true
+      } else {
+        this.loginStatus = false
+      }
+    }
+  }
+}
+</script>
+
+<style>
+.user_show{
+  position: absolute;
+  right: 0%;
+  width: 100px;
+  height: 40px;
+}
+
+.head_photo{
+  height: 20%;
+}
+
+.block{
+  width: 60%;
+  height: 70%;
+}
+</style>

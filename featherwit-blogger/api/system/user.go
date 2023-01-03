@@ -52,7 +52,7 @@ func (u *UserApi) Login(c *gin.Context) {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	response.BuildOkResponse(0, response.Login{
+	response.BuildOkResponse(0, &response.Login{
 		Username: user.Username,
 		Nickname: user.Nickname,
 		Token:    token,
