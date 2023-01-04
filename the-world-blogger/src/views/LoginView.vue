@@ -22,7 +22,6 @@
 
 <script>
 import axios from "axios"
-import config from '../../config/config'
 
 export default {
     data() {
@@ -35,11 +34,13 @@ export default {
     },
     methods: {
         login() {
-            axios.post(config.host + "/api/user/login", this.loginData).then(res => {
+            axios.post("/api/user/login", this.loginData).then(res => {
                 if (res.data.code === 0) {
                     localStorage.setItem("user", res.data.data.username)
                     axios.defaults.headers.common['Authorization'] = res.data.data.token
                     this.$router.push("/")
+                } else {
+                    // todo: 登陆失败的对应操作
                 }
             })
         },

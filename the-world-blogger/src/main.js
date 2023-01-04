@@ -4,6 +4,8 @@ import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/global.css'
+import config from '../config/config'
+import axios from 'axios'
 
 Vue.config.productionTip = false
 
@@ -13,3 +15,5 @@ new Vue({
   router,
   render: h => h(App)
 }).$mount('#app')
+
+axios.defaults.baseURL = config.host

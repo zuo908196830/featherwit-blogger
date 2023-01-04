@@ -54,7 +54,6 @@
 
 <script>
 import axios from 'axios'
-import config from '../config/config'
 export default{
   data() {
     return {
@@ -65,7 +64,7 @@ export default{
   },
   methods: {
     logout(){
-      axios.get(config.host + "/api/user/logout").then(res => {
+      axios.get("/api/user/logout").then(res => {
         if (res.data.code === 0) {
           localStorage.removeItem("user")
           this.username = ""
