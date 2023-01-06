@@ -11,6 +11,8 @@ type User struct {
 	Role      int       `json:"role" xorm:"int"`
 	Nickname  string    `json:"nickname" xorm:"varchar(45)"`
 	Telephone string    `json:"telephone" xorm:"varchar(20)"`
+	Mail      string    `json:"mail" xorm:"varchar(45)"`
+	Profile   string    `json:"profile" xorm:"varchar(400)"`
 	Headshot  string    `json:"headshot" xorm:"varchar(50)"`
 }
 

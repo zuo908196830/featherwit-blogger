@@ -121,3 +121,19 @@ func (u *UserApi) Register(c *gin.Context) {
 		Token:    token,
 	}, c)
 }
+
+func (u *UserApi) GetUser(c *gin.Context) {
+	get, _ := c.Get("User-Info")
+	tkmp := get.(map[string]string)
+	username := tkmp["username"]
+	user, err := UserService.GetUserByUsername(username)
+	if err != nil {
+		log.Printf("get user error: %v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	} else if user == nil {
+		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "user not exist"), c)
+		return
+	}
+	response.BuildOkResponse(0, user, c)
+}

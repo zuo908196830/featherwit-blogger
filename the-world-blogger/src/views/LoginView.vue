@@ -4,6 +4,16 @@
             <div>
                 <h2 class="login_show">登录</h2>
             </div>
+            <div style="position:absolute; top:20%; height:30px; width:100%;">
+                <el-alert v-if="loginCode === 1001" title="该用户不存在" type="error" center show-icon closable>
+                </el-alert>
+                <el-alert v-if="loginCode === 1004" title="密码错误" type="error" center show-icon closable>
+                </el-alert>
+                <el-alert v-if="loginCode === 1003" title="格式错误" type="error" center show-icon closable>
+                </el-alert>
+                <el-alert v-if="loginCode === 500" title="服务端错误" type="error" center show-icon closable>
+                </el-alert>
+            </div>
             <el-form class="login_form" :model="loginData">
                 <el-form-item>
                     <el-input prefix-icon="el-icon-user" v-model="loginData.username"></el-input>
@@ -29,22 +39,32 @@ export default {
             loginData: {
                 username: "",
                 password: ""
-            }
+            },
+            loginCode: 0
         }
     },
     methods: {
         login() {
             axios.post("/api/user/login", this.loginData).then(res => {
-                if (res.data.code === 0) {
-                    localStorage.setItem("user", res.data.data.username)
-                    axios.defaults.headers.common['Authorization'] = res.data.data.token
-                    this.$router.push("/")
+                console.log(res.status)
+                if (res.status === 200) {
+                    this.loginCode = res.data.code
+                    if (this.loginCode === 0) {
+                        if (res.data.data.nickname !== "") {
+                            localStorage.setItem("user", res.data.data.nickname)
+                        } else {
+                            localStorage.setItem("user", res.data.data.username)
+                        }
+                        axios.defaults.headers.common['Authorization'] = res.data.data.token
+                        this.$router.push("/")
+                    }
                 } else {
                     // todo: 登陆失败的对应操作
+                    this.loginCode = 500
                 }
             })
         },
-        regist(){
+        regist() {
 
         }
     }
@@ -52,12 +72,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.login_view{
+.login_view {
     background-color: #2b4b6b;
     height: 100%;
 }
 
-.login_box{
+.login_box {
     width: 450px;
     height: 300px;
     background-color: aliceblue;
@@ -68,11 +88,12 @@ export default {
     transform: translate(-50%, -50%);
 }
 
-.login_button{
+.login_button {
     display: flex;
     justify-content: flex-end;
 }
-.login_form{
+
+.login_form {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -80,7 +101,7 @@ export default {
     box-sizing: border-box;
 }
 
-.login_show{
+.login_show {
     position: absolute;
     width: 20%;
     left: 45%;
