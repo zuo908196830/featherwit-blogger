@@ -124,9 +124,9 @@ func (u *UserApi) Register(c *gin.Context) {
 
 func (u *UserApi) GetUser(c *gin.Context) {
 	get, _ := c.Get("User-Info")
-	tkmp := get.(map[string]string)
+	tkmp := get.(map[string]interface{})
 	username := tkmp["username"]
-	user, err := UserService.GetUserByUsername(username)
+	user, err := UserService.GetUserByUsername(username.(string))
 	if err != nil {
 		log.Printf("get user error: %v", err)
 		response.BuildErrorResponse(err, c)
