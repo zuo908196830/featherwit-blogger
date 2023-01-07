@@ -135,5 +135,13 @@ func (u *UserApi) GetUser(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "user not exist"), c)
 		return
 	}
-	response.BuildOkResponse(0, user, c)
+	resp := &response.UserData{
+		Username:  user.Username,
+		Role:      user.Role,
+		Nickname:  user.Nickname,
+		Telephone: user.Telephone,
+		Mail:      user.Mail,
+		Profile:   user.Profile,
+	}
+	response.BuildOkResponse(0, resp, c)
 }

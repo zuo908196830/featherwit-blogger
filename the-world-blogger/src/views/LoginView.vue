@@ -56,6 +56,8 @@ export default {
                             localStorage.setItem("user", res.data.data.username)
                         }
                         axios.defaults.headers.common['Authorization'] = res.data.data.token
+                        localStorage.setItem("loginStatus", true)
+                        localStorage.setItem("token", res.data.data.token)
                         this.$router.push("/")
                     }
                 } else {
