@@ -3,6 +3,7 @@ package system
 import (
 	"featherwit-blogger/api"
 	middle_ware "featherwit-blogger/middle-ware"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,5 +18,6 @@ func (u *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 		userRouter.GET("logout", middle_ware.ConsumerToken(), UserApi.Logout)
 		userRouter.GET("data", middle_ware.ConsumerToken(), UserApi.GetUser)
 		userRouter.GET("status", UserApi.LoginStatus)
+		userRouter.GET("token/login", middle_ware.ConsumerToken(), UserApi.TokenLogin)
 	}
 }

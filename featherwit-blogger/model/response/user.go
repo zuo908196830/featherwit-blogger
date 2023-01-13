@@ -7,7 +7,7 @@ type Login struct {
 }
 
 type UserData struct {
-	Username  string `json:"userName" xorm:"varchar(25) 'username' index"`
+	Username  string `json:"username" xorm:"varchar(25) 'username' index"`
 	Role      int    `json:"role" xorm:"int"`
 	Nickname  string `json:"nickname" xorm:"varchar(45)"`
 	Telephone string `json:"telephone" xorm:"varchar(20)"`

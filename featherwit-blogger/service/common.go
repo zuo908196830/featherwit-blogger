@@ -11,10 +11,12 @@ type CommonService struct{}
 var CommonServiceApp = new(CommonService)
 
 func (c *CommonService) RedisSet(key string, val interface{}) error {
+	RedisConn := global.RedisConnPool.Get()
+	defer RedisConn.Close()
 	_, ok1 := val.(string)
 	_, ok2 := val.(int)
 	if ok1 || ok2 {
-		_, err := global.RedisConn.Do("Set", key, val)
+		_, err := RedisConn.Do("Set", key, val)
 		if err != nil {
 			log.Printf("redis set error:%v", err)
 			return err
@@ -27,7 +29,7 @@ func (c *CommonService) RedisSet(key string, val interface{}) error {
 			return err
 		}
 		v := string(b)
-		_, err = global.RedisConn.Do("Set", key, v)
+		_, err = RedisConn.Do("Set", key, v)
 		if err != nil {
 			log.Printf("redis set error:%v", err)
 			return err
@@ -37,7 +39,9 @@ func (c *CommonService) RedisSet(key string, val interface{}) error {
 }
 
 func (c *CommonService) RedisSetTime(key string, t int) error {
-	_, err := global.RedisConn.Do("expire", key, t)
+	RedisConn := global.RedisConnPool.Get()
+	defer RedisConn.Close()
+	_, err := RedisConn.Do("expire", key, t)
 	if err != nil {
 		log.Printf("set redis expiration time error:%v", err)
 		return err
@@ -46,7 +50,9 @@ func (c *CommonService) RedisSetTime(key string, t int) error {
 }
 
 func (c *CommonService) RedisGet(key string) (interface{}, error) {
-	val, err := global.RedisConn.Do("Get", key)
+	RedisConn := global.RedisConnPool.Get()
+	defer RedisConn.Close()
+	val, err := RedisConn.Do("Get", key)
 	if err != nil {
 		log.Printf("redis get error:%v", err)
 		return nil, err
@@ -55,7 +61,9 @@ func (c *CommonService) RedisGet(key string) (interface{}, error) {
 }
 
 func (c *CommonService) RedisDelete(key string) error {
-	_, err := global.RedisConn.Do("del", key)
+	RedisConn := global.RedisConnPool.Get()
+	defer RedisConn.Close()
+	_, err := RedisConn.Do("del", key)
 	if err != nil {
 		log.Printf("redis delete error: %v", err)
 		return err

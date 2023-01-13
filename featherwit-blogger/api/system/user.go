@@ -6,8 +6,9 @@ import (
 	"featherwit-blogger/model/request"
 	"featherwit-blogger/model/response"
 	"featherwit-blogger/utils"
-	"github.com/gin-gonic/gin"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserApi struct{}
@@ -146,11 +147,17 @@ func (u *UserApi) GetUser(c *gin.Context) {
 	response.BuildOkResponse(0, resp, c)
 }
 
-func (u *UserApi) LoginStatus(c *gin.Context)  {
+func (u *UserApi) LoginStatus(c *gin.Context) {
 	ok, exists := c.Get("login-status")
 	if exists {
 		response.BuildOkResponse(0, ok.(bool), c)
 	} else {
 		response.BuildOkResponse(0, false, c)
 	}
+}
+
+func (u *UserApi) TokenLogin(c *gin.Context) {
+	value, _ := c.Get("User-Info")
+	tkmp := value.(map[string]interface{})
+	response.BuildOkResponse(0, tkmp, c)
 }

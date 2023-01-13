@@ -45,6 +45,7 @@
 
 <script>
 import axios from 'axios'
+import config from '../config/config'
 
 export default {
   data() {
@@ -86,8 +87,35 @@ export default {
     }
   },
   created() {
+    axios.defaults.baseURL = config.host
     if (localStorage.getItem("token")) {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
+      axios.get("/api/user/token/login").then(res => {
+        if (res.data.code === 0) {
+          if (res.data.data.nickname) {
+            this.username = res.data.data.nickname
+            localStorage.setItem("user", res.data.data.nickname)
+          } else {
+            this.username = res.data.data.username
+            localStorage.setItem("user", res.data.data.username)
+          }
+          this.loginStatus = true
+          localStorage.setItem("loginStatus", true)
+        } else {
+          localStorage.setItem("loginStatus", false)
+          localStorage.removeItem("user")
+          this.loginStatus = false
+          this.username = false
+          axios.defaults.headers.common['Authorization'] = ""
+        }
+
+      }).catch(() => {
+        localStorage.setItem("loginStatus", false)
+        localStorage.removeItem("user")
+        this.loginStatus = false
+        this.username = false
+        axios.defaults.headers.common['Authorization'] = ""
+      })
       // this.loginStatus()
     } else {
       alert("else")

@@ -2,14 +2,15 @@ package global
 
 import (
 	"featherwit-blogger/model"
-	"github.com/garyburd/redigo/redis"
 	"log"
+
+	"github.com/garyburd/redigo/redis"
 	"xorm.io/xorm"
 )
 
 var (
-	DbEngine  *xorm.Engine
-	RedisConn redis.Conn
+	DbEngine      *xorm.Engine
+	RedisConnPool *redis.Pool
 )
 
 func NewDbEngine() {
@@ -35,11 +36,16 @@ func InitDbEngine() {
 func NewRedisEngine() {
 	password := redis.DialPassword("zuo123456789ke")
 	database := redis.DialDatabase(0)
-	conn, err := redis.Dial("tcp", "121.89.220.131:6379", database, password)
-	if err != nil {
-		log.Fatalf("redis conn error:%v", err)
+	pool := &redis.Pool{
+		MaxIdle: 16, //最初的连接数量
+		// MaxActive:1000000,    //最大连接数量
+		MaxActive:   0,   //连接池最大连接数量,不确定可以用0（0表示自动定义），按需分配
+		IdleTimeout: 300, //连接关闭时间 300秒 （300秒不使用自动关闭）
+		Dial: func() (redis.Conn, error) {
+			return redis.Dial("tcp", "121.89.220.131:6379", database, password)
+		},
 	}
-	RedisConn = conn
+	RedisConnPool = pool
 }
 
 func InitGlobal() {
