@@ -145,3 +145,12 @@ func (u *UserApi) GetUser(c *gin.Context) {
 	}
 	response.BuildOkResponse(0, resp, c)
 }
+
+func (u *UserApi) LoginStatus(c *gin.Context)  {
+	ok, exists := c.Get("login-status")
+	if exists {
+		response.BuildOkResponse(0, ok.(bool), c)
+	} else {
+		response.BuildOkResponse(0, false, c)
+	}
+}

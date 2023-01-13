@@ -66,7 +66,18 @@ export default {
           localStorage.setItem("loginStatus", false)
         }
       })
-    }
+    },
+    // getLoginStatus() {
+    //   axios.get("/api/user/status").then(res => {
+    //     if (!res.data.data) {
+    //       localStorage.setItem("loginStatus", false)
+    //       localStorage.removeItem("user")
+    //       axios.defaults.headers.common['Authorization'] = ""
+    //       this.username = ""
+    //       this.loginStatus = false
+    //     }
+    //   })
+    // }
   },
   watch: {
     "$route.path": function () {      //监视每次router的变化
@@ -77,7 +88,9 @@ export default {
   created() {
     if (localStorage.getItem("token")) {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
+      // this.loginStatus()
     } else {
+      alert("else")
       localStorage.setItem("loginStatus", false)
       localStorage.removeItem("user")
       axios.defaults.headers.common['Authorization'] = ""
