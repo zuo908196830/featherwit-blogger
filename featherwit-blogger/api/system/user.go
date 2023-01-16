@@ -85,10 +85,13 @@ func (u *UserApi) Register(c *gin.Context) {
 		return
 	}
 	err = UserService.AddUser(&model.User{
-		Username: register.Username,
-		Password: register.Password,
-		Role:     register.Role,
-		Nickname: register.Nickname,
+		Username:  register.Username,
+		Password:  register.Password,
+		Role:      register.Role,
+		Nickname:  register.Nickname,
+		Telephone: register.Telephone,
+		Mail:      register.Mail,
+		Profile:   register.Profile,
 	})
 	if err != nil {
 		log.Printf("add user error: %v", err)

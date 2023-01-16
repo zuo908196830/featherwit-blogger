@@ -23,7 +23,9 @@
                 </el-form-item>
                 <el-form-item class="login_button">
                     <el-button type="primary" @click="login">登录</el-button>
-                    <el-button type="info" @click="regist">注册</el-button>
+                    <router-link to="/register">
+                        <el-button type="info" @click="regist">注册</el-button>
+                    </router-link>
                 </el-form-item>
             </el-form>
         </div>
@@ -32,6 +34,7 @@
 
 <script>
 import axios from "axios"
+import LoginFunc from "../js/LoginFunc"
 
 export default {
     data() {
@@ -51,13 +54,10 @@ export default {
                     this.loginCode = res.data.code
                     if (this.loginCode === 0) {
                         if (res.data.data.nickname !== "") {
-                            localStorage.setItem("user", res.data.data.nickname)
+                            LoginFunc.setLoginStatus(res.data.data.nickname, res.data.data.token)
                         } else {
-                            localStorage.setItem("user", res.data.data.username)
+                            LoginFunc.setLoginStatus(res.data.data.username, res.data.data.token)
                         }
-                        axios.defaults.headers.common['Authorization'] = res.data.data.token
-                        localStorage.setItem("loginStatus", true)
-                        localStorage.setItem("token", res.data.data.token)
                         this.$router.push("/")
                     }
                 } else {
@@ -68,6 +68,9 @@ export default {
         },
         regist() {
 
+        },
+        getStatus() {
+            alert(localStorage.getItem('loginStatus'))
         }
     }
 }

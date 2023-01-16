@@ -83,7 +83,12 @@ export default {
   watch: {
     "$route.path": function () {      //监视每次router的变化
       this.username = localStorage.getItem("user")
-      this.loginStatus = localStorage.getItem("loginStatus")
+      let lst = localStorage.getItem("loginStatus")
+      if (lst === 'true') {
+        this.loginStatus = true
+      } else {
+        this.loginStatus = false
+      }
     }
   },
   created() {

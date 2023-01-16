@@ -6,8 +6,11 @@ type Login struct {
 }
 
 type Register struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Role     int    `json:"role" binding:"required"`
-	Nickname string `json:"nickname"`
+	Username  string `json:"username" binding:"required"`
+	Password  string `json:"password" binding:"required"`
+	Role      int    `json:"role" binding:"required"`
+	Nickname  string `json:"nickname"`
+	Mail      string `json:"mail"`
+	Telephone string `json:"telephone"`
+	Profile   string `json:"profile"`
 }
