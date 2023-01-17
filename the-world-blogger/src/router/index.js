@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import UserData from '../views/UserDataView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import MarkDown from '../views/MarkDown.vue'
 
 Vue.use(VueRouter)
 
@@ -30,6 +31,10 @@ const routes = [
     path: '/register',
     name: 'register',
     component: RegisterView
+  },
+  {
+    path: '/blog/content',
+    component: MarkDown
   }
 ]
 

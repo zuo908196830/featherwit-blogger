@@ -65,6 +65,9 @@ export default {
           this.loginStatus = false
           this.drawer = false
           localStorage.setItem("loginStatus", false)
+          if (this.$route.path === "/user/data") {
+            this.$router.push('/')
+          }
         }
       })
     },
