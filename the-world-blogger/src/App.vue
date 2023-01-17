@@ -126,7 +126,6 @@ export default {
       })
       // this.loginStatus()
     } else {
-      alert("else")
       localStorage.setItem("loginStatus", false)
       localStorage.removeItem("user")
       axios.defaults.headers.common['Authorization'] = ""

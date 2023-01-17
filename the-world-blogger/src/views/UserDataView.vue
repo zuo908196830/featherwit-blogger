@@ -63,8 +63,13 @@ export default {
             axios.get("/api/user/data").then(res => {
                 if (res.data.code === 0) {
                     this.userData = res.data.data
-                } else if (res.data.code === 403) {
+                } else if (res.data.code === 1006) {
                     // todo 提示未登录
+                    this.$message({
+                        message: '您还未登录',
+                        type: 'warning'
+                    })
+                    this.$router.push('/login')
                 }
             }).catch(() => {
 

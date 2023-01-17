@@ -3,6 +3,7 @@ package system
 import (
 	"featherwit-blogger/api"
 	middle_ware "featherwit-blogger/middle-ware"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +13,7 @@ func (b *BlogRouter) InitBlogRouter(Router *gin.RouterGroup) {
 	blogRouter := Router.Group("blog")
 	blogApi := api.ApiGroupApp.SystemApiGroup.BlogApi
 	{
-		blogRouter.POST("add", middle_ware.ConsumerToken(), blogApi.AddBlog)
+		blogRouter.POST("add", middle_ware.AddBlog(), blogApi.AddBlog)
 		blogRouter.GET("/:limit/:offset", blogApi.SearchBlog)
 		blogRouter.GET("id/:id", blogApi.GetBlogById)
 		blogRouter.PUT("update/:id", blogApi.UpdateBlog)

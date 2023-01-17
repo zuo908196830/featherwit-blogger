@@ -47,9 +47,14 @@ export default {
                         type: 'success'
                     });
                     this.$router.push('/')
+                } else if (res.data.code === 1006) {
+                    this.$message({
+                        message: '请先登录',
+                        type: 'warning'
+                    })
+                    this.$router.push('/login')
                 }
             }).catch(() => {
-
             })
         }
     },

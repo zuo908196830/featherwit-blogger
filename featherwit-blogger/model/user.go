@@ -13,7 +13,7 @@ type User struct {
 	Telephone string    `json:"telephone" xorm:"varchar(20)"`
 	Mail      string    `json:"mail" xorm:"varchar(45)"`
 	Profile   string    `json:"profile" xorm:"varchar(400)"` //简介
-	Headshot  string    `json:"headshot" xorm:"varchar(50)"`
+	Headshot  string    `json:"headshot" xorm:"varchar(200)"`
 }
 
 func (u *User) TableName() string {

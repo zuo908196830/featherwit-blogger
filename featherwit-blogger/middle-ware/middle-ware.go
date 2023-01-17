@@ -5,8 +5,9 @@ import (
 	"featherwit-blogger/model/response"
 	"featherwit-blogger/service"
 	"featherwit-blogger/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Cors() gin.HandlerFunc {
@@ -82,5 +83,18 @@ func AdministratorsToken() gin.HandlerFunc {
 			return
 		}
 		c.Next()
+	}
+}
+
+func AddBlog() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		_, exists := c.Get("User-Info")
+		if exists {
+			c.Next()
+		} else {
+			response.BuildErrorResponse(errors.NewError(errors.Unauthorized, nil), c)
+			c.Abort()
+			return
+		}
 	}
 }
