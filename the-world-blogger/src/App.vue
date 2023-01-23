@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-header>
+    <el-header style="height:40px">
       <nav>
         <router-link to="/login" v-if="!loginStatus" class="user_show">登录/注册</router-link>
 

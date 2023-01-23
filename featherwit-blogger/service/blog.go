@@ -55,3 +55,12 @@ func (b *BlogService) UpdateBlog(blog *model.Blob) error {
 	}
 	return nil
 }
+
+func (b *BlogService) BlogCount() (int64, error) {
+	n, err := global.DbEngine.Count(new(model.Blob))
+	if err != nil {
+		log.Printf("get blog error:%v", err)
+		return 0, err
+	}
+	return n, nil
+}

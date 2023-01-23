@@ -5,8 +5,9 @@ import (
 	"featherwit-blogger/model/errors"
 	"featherwit-blogger/model/request"
 	"featherwit-blogger/model/response"
-	"github.com/gin-gonic/gin"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 type BlogApi struct{}
@@ -123,4 +124,15 @@ func (b *BlogApi) UpdateBlog(c *gin.Context) {
 		return
 	}
 	response.BuildOkResponse(0, nil, c)
+}
+
+func (b *BlogApi) GetBlogCount(c *gin.Context) {
+	n, err := BlogService.BlogCount()
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	response.BuildOkResponse(0, &response.BlogCountResponse{
+		Total: n,
+	}, c)
 }
