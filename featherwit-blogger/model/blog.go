@@ -12,7 +12,8 @@ type Blob struct {
 	Views       int64     `json:"views" xorm:"bigint"` //浏览量
 	CommonCount int64     `json:"commonCount" xorm:"bigint"`
 	LikeCount   int64     `json:"likeCount" xorm:"bigint"`
-	Cover       string    `json:"cover" xorm:"varchar(200)"`
+	Cover       string    `json:"cover" xorm:"varchar(200)"` //封面
+	Profile     string    `json:"profile" xorm:"text"`       //文章简介
 }
 
 func (b *Blob) TableName() string {

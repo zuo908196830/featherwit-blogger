@@ -4,6 +4,12 @@
             <el-input type="textarea" autosize placeholder="请输入题目" v-model="title">
             </el-input>
         </div>
+        <div style="margin: 10px 0;"></div>
+        <div>
+            <el-input type="textarea" placeholder="请输入文章简介" v-model="profile" maxlength="50" show-word-limit>
+            </el-input>
+        </div>
+        <div style="margin: 10px 0;"></div>
         <mavon-editor v-model="content" ref="md" @change="change" style="min-height: 600px" />
         <button @click="submit">提交</button>
     </div>
@@ -23,7 +29,8 @@ export default {
         return {
             content: '', // 输入的markdown
             html: '',    // 及时转的html
-            title: ''
+            title: '',
+            profile: '',
         }
     },
     methods: {
@@ -39,6 +46,7 @@ export default {
             let blogData = {}
             blogData.title = this.title
             blogData.content = this.content
+            blogData.profile = this.profile
             axios.post('/api/blog/add', blogData).then(res => {
                 if (res.data.code === 0) {
                     // todo 成功后跳转文章列表

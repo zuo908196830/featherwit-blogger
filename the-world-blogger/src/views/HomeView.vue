@@ -41,10 +41,20 @@ export default {
                     type: 'error'
                 })
             })
+        },
+        getBlogs() {
+            axios.get('/api/blog/' + this.limit + '/' + (this.limit) * (this.page - 1)).then(res => {
+                if (res.data.code === 0) {
+                    this.blogs = res.data.data
+                }
+            }).catch(() => {
+
+            })
         }
     },
     created() {
         this.getTotal()
+        this.getBlogs()
     },
 }
 </script>

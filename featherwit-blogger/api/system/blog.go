@@ -41,6 +41,7 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 		Username:    username,
 		Title:       param.Title,
 		Content:     param.Content,
+		Profile:     param.Profile,
 		Views:       0,
 		CommonCount: 0,
 		LikeCount:   0,
