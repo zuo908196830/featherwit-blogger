@@ -6,7 +6,8 @@ type Blob struct {
 	ID          int       `json:"id" xorm:"int not null pk id autoincr"`
 	CreateAt    time.Time `json:"createAt" xorm:"created"`
 	UpdateAt    time.Time `json:"updateAt" xorm:"updated"`
-	Username    string    `json:"username" xorm:"varchar(25) index"`
+	Username    string    `json:"username" xorm:"varchar(25) index"` //作者id
+	Nickname    string    `json:"nickname" xorm:"varchar(45)"`       //作者昵称
 	Title       string    `json:"title" xorm:"text"`
 	Content     string    `json:"content" xrom:"longtext"`
 	Views       int64     `json:"views" xorm:"bigint"` //浏览量

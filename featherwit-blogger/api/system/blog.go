@@ -38,7 +38,8 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 		return
 	}
 	blog := &model.Blob{
-		Username:    username,
+		Username:    user.Username,
+		Nickname:    user.Nickname,
 		Title:       param.Title,
 		Content:     param.Content,
 		Profile:     param.Profile,
