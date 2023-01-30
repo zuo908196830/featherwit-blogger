@@ -38,14 +38,14 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 		return
 	}
 	blog := &model.Blob{
-		Username:    user.Username,
-		Nickname:    user.Nickname,
-		Title:       param.Title,
-		Content:     param.Content,
-		Profile:     param.Profile,
-		Views:       0,
-		CommonCount: 0,
-		LikeCount:   0,
+		Username:     user.Username,
+		Nickname:     user.Nickname,
+		Title:        param.Title,
+		Content:      param.Content,
+		Profile:      param.Profile,
+		Views:        0,
+		CommentCount: 0,
+		LikeCount:    0,
 	}
 	err = BlogService.AddBlog(blog)
 	if err != nil {
