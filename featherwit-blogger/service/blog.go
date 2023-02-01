@@ -21,7 +21,7 @@ func (b *BlogService) AddBlog(blog *model.Blob) error {
 
 func (b *BlogService) SearchBlog(limit int, offset int) ([]*model.Blob, error) {
 	blogs := make([]*model.Blob, 0)
-	err := global.DbEngine.Cols("id", "username", "create_at", "update_at", "title", "views", "common_count", "like_count").Limit(limit, offset).Find(&blogs)
+	err := global.DbEngine.Cols("id", "username", "create_at", "update_at", "title", "views", "comment_count", "like_count").Limit(limit, offset).Find(&blogs)
 	if err != nil {
 		log.Printf("search blog error: %v", err)
 		return nil, err
@@ -40,8 +40,8 @@ func (b *BlogService) GetBlogById(id int) (*model.Blob, error) {
 	return blog, nil
 }
 
-func (b *BlogService) BlogExist(id int, username string) (bool, error) {
-	exist, err := global.DbEngine.Exist(&model.Blob{ID: id, Username: username})
+func (b *BlogService) BlogExist(id int) (bool, error) {
+	exist, err := global.DbEngine.Exist(&model.Blob{ID: id})
 	if err != nil {
 		return false, err
 	}
@@ -63,4 +63,27 @@ func (b *BlogService) BlogCount() (int64, error) {
 		return 0, err
 	}
 	return n, nil
+}
+
+func (b *BlogService) ContentCountPlus1(blogId int) (bool, error) {
+	blog := &model.Blob{}
+	ok, err := global.DbEngine.Cols("comment_count").Where("id = ?", blogId).Get(blog)
+	if err != nil {
+		log.Printf("get blog error:%v", err)
+		return false, err
+	} else if !ok {
+		log.Printf("blog is not exist")
+		return false, nil
+	}
+	mp := make(map[string]int64)
+	mp["comment_count"] = blog.CommentCount + 1
+	i, err := global.DbEngine.Table(blog).Where("id = ?", blogId).Update(mp)
+	if err != nil {
+		log.Printf("update blog error:%v", err)
+		return false, err
+	} else if i == 0 {
+		log.Printf("update blog is 0")
+		return false, nil
+	}
+	return true, nil
 }

@@ -38,14 +38,10 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 		return
 	}
 	blog := &model.Blob{
-		Username:     user.Username,
-		Nickname:     user.Nickname,
-		Title:        param.Title,
-		Content:      param.Content,
-		Profile:      param.Profile,
-		Views:        0,
-		CommentCount: 0,
-		LikeCount:    0,
+		Username: user.Username,
+		Title:    param.Title,
+		Content:  param.Content,
+		Profile:  param.Profile,
 	}
 	err = BlogService.AddBlog(blog)
 	if err != nil {
@@ -105,7 +101,7 @@ func (b *BlogApi) UpdateBlog(c *gin.Context) {
 	val, _ := c.Get("User-Info")
 	tkmp := val.(map[string]interface{})
 	username := tkmp["username"].(string)
-	exist, err := BlogService.BlogExist(param.ID, username)
+	exist, err := BlogService.BlogExist(param.ID)
 	if err != nil {
 		log.Printf("get blog error: %v", err)
 		response.BuildErrorResponse(err, c)

@@ -48,9 +48,20 @@ func TestBlogService_GetBlogById(t *testing.T) {
 
 func TestBlogService_BlogExist(t *testing.T) {
 	global.InitGlobal()
-	exist, err := BlogServiceApp.BlogExist(1, "xxx")
+	exist, err := BlogServiceApp.BlogExist(1)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
 	log.Println(exist)
+}
+
+func TestBlogService_ContentCountPlus1(t *testing.T) {
+	global.InitGlobal()
+	b, err := BlogServiceApp.ContentCountPlus1(1)
+	if err != nil {
+		log.Fatalf("%v", err)
+	} else if !b {
+		log.Fatal()
+	}
+	log.Printf("ok")
 }

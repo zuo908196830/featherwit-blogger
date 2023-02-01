@@ -3,6 +3,7 @@ package router
 import (
 	middle_ware "featherwit-blogger/middle-ware"
 	"featherwit-blogger/router/system"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,6 +20,7 @@ func Init() *gin.Engine {
 	{
 		RouterGroupApp.systemRouter.InitUserRouter(outRouter)
 		RouterGroupApp.systemRouter.InitBlogRouter(outRouter)
+		RouterGroupApp.systemRouter.InitCommentRouter(outRouter)
 	}
 	return Router
 }

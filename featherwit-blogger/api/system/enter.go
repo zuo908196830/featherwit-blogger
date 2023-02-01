@@ -5,10 +5,12 @@ import "featherwit-blogger/service"
 type ApiGroup struct {
 	UserApi
 	BlogApi
+	CommentApi
 }
 
 var (
-	CommonService = new(service.CommonService)
-	UserService   = new(service.UserService)
-	BlogService   = new(service.BlogService)
+	CommonService  = service.CommonServiceApp
+	UserService    = service.UserServiceApp
+	BlogService    = service.BlogServiceApp
+	CommentService = service.CommentServiceApp
 )

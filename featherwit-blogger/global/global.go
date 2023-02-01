@@ -27,6 +27,7 @@ func InitDbEngine() {
 	err := DbEngine.Sync2(
 		new(model.User),
 		new(model.Blob),
+		new(model.Comment),
 	)
 	if err != nil {
 		log.Fatalf("create table error:%v", err)
