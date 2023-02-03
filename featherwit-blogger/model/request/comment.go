@@ -8,5 +8,5 @@ type AddComment struct {
 }
 
 type CommentId struct {
-	ID int64 `json:"commentId"`
+	ID int64 `json:"commentId" uri:"commentId"`
 }

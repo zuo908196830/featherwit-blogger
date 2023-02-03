@@ -104,5 +104,42 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 }
 
 func (ca *CommentApi) DeleteComment(c *gin.Context) {
-
+	var param request.CommentId
+	err := c.ShouldBindUri(&param)
+	if err != nil {
+		response.BuildErrorResponse(err, nil)
+		return
+	}
+	mp, _ := c.Get("User-Info")
+	tkmp := mp.(map[string]interface{})
+	username := tkmp["username"].(string)
+	comment, err := CommentService.GetCommentById(param.ID)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	} else if comment == nil {
+		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, nil), c)
+		return
+	}
+	if comment.Username != username {
+		response.BuildErrorResponse(errors.NewError(errors.Unauthorized, nil), c)
+		return
+	}
+	// 先删除子评论，再删除自身
+	children, err := CommentService.SearchCommentByParentId(param.ID)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	deleteList := make([]int64, len(children))
+	for i := 0; i < len(children); i++ {
+		deleteList[i] = children[i].ID
+	}
+	deleteList = append(deleteList, param.ID)
+	err = CommentService.DeleteCommentById(deleteList)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	response.BuildOkResponse(0, nil, c)
 }

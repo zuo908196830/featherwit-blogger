@@ -14,5 +14,6 @@ func (cr *CommentRouter) InitCommentRouter(Router *gin.RouterGroup) {
 	commentApi := api.ApiGroupApp.SystemApiGroup.CommentApi
 	{
 		commentRouter.POST("add", middle_ware.ConsumerToken(), commentApi.AddComment)
+		commentRouter.DELETE(":commentId", middle_ware.ConsumerToken(), commentApi.DeleteComment)
 	}
 }
