@@ -19,7 +19,7 @@ func (cs *CommentService) AddComment(comment *model.Comment) error {
 	}
 }
 
-func (cs *CommentService) ContentCountPlus1(id int) (bool, error) {
+func (cs *CommentService) ContentCountPlus1(id int64) (bool, error) {
 	comment := &model.Comment{}
 	ok, err := global.DbEngine.Cols("comment_count").Where("id = ?", id).Get(comment)
 	if err != nil {
@@ -55,7 +55,7 @@ func (cs *CommentService) GetCommentById(id int) (*model.Comment, error) {
 	return comment, nil
 }
 
-func (cs *CommentService) CommentExist(id int) (bool, error) {
+func (cs *CommentService) CommentExist(id int64) (bool, error) {
 	has, err := global.DbEngine.Exist(&model.Comment{ID: id})
 	if err != nil {
 		log.Printf("select comment error:%v", err)

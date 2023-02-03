@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Blob struct {
-	ID           int       `json:"id" xorm:"int not null pk id autoincr"`
+	ID           int64     `json:"id" xorm:"bigint not null pk id autoincr"`
 	CreateAt     time.Time `json:"createAt" xorm:"created"`
 	UpdateAt     time.Time `json:"updateAt" xorm:"updated"`
 	Username     string    `json:"username" xorm:"varchar(25) index"` //作者id

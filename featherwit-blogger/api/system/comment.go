@@ -102,3 +102,7 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 	session.Commit()
 	response.BuildOkResponse(0, nil, c)
 }
+
+func (ca *CommentApi) DeleteComment(c *gin.Context) {
+
+}

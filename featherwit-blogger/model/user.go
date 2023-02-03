@@ -3,10 +3,9 @@ package model
 import "time"
 
 type User struct {
-	ID        int       `json:"id" xorm:"int not null pk id autoincr"`
 	CreateAt  time.Time `json:"createAt" xorm:"created"`
 	UpdateAt  time.Time `json:"updateAt" xorm:"updated"`
-	Username  string    `json:"userName" xorm:"varchar(25) 'username' index"`
+	Username  string    `json:"userName" xorm:"varchar(25) 'username' index unique"`
 	Password  string    `json:"password" xorm:"varchar(45) 'password'"`
 	Role      int       `json:"role" xorm:"int"`
 	Nickname  string    `json:"nickname" xorm:"varchar(45)"`

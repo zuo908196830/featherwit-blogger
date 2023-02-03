@@ -29,7 +29,7 @@ func (b *BlogService) SearchBlog(limit int, offset int) ([]*model.Blob, error) {
 	return blogs, nil
 }
 
-func (b *BlogService) GetBlogById(id int) (*model.Blob, error) {
+func (b *BlogService) GetBlogById(id int64) (*model.Blob, error) {
 	blog := &model.Blob{ID: id}
 	ok, err := global.DbEngine.Get(blog)
 	if err != nil {
@@ -40,7 +40,7 @@ func (b *BlogService) GetBlogById(id int) (*model.Blob, error) {
 	return blog, nil
 }
 
-func (b *BlogService) BlogExist(id int) (bool, error) {
+func (b *BlogService) BlogExist(id int64) (bool, error) {
 	exist, err := global.DbEngine.Exist(&model.Blob{ID: id})
 	if err != nil {
 		return false, err
@@ -65,7 +65,7 @@ func (b *BlogService) BlogCount() (int64, error) {
 	return n, nil
 }
 
-func (b *BlogService) ContentCountPlus1(blogId int) (bool, error) {
+func (b *BlogService) ContentCountPlus1(blogId int64) (bool, error) {
 	blog := &model.Blob{}
 	ok, err := global.DbEngine.Cols("comment_count").Where("id = ?", blogId).Get(blog)
 	if err != nil {
