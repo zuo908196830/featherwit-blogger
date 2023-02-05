@@ -20,7 +20,7 @@ func (u *UserApi) Login(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
 		return
 	}
-	user, err := UserService.GetUserByUsername(login.Username)
+	user, err := UserService.GetUserByUsername(login.Username, nil)
 	if err != nil {
 		log.Printf("get user error: %v", err)
 		response.BuildErrorResponse(err, c)
@@ -75,7 +75,7 @@ func (u *UserApi) Register(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
 		return
 	}
-	user, err := UserService.GetUserByUsername(register.Username)
+	user, err := UserService.GetUserByUsername(register.Username, nil)
 	if err != nil {
 		log.Printf("select error: %v", err)
 		response.BuildErrorResponse(err, c)
@@ -92,7 +92,7 @@ func (u *UserApi) Register(c *gin.Context) {
 		Telephone: register.Telephone,
 		Mail:      register.Mail,
 		Profile:   register.Profile,
-	})
+	}, nil)
 	if err != nil {
 		log.Printf("add user error: %v", err)
 		response.BuildErrorResponse(err, c)
@@ -130,7 +130,7 @@ func (u *UserApi) GetUser(c *gin.Context) {
 	get, _ := c.Get("User-Info")
 	tkmp := get.(map[string]interface{})
 	username := tkmp["username"]
-	user, err := UserService.GetUserByUsername(username.(string))
+	user, err := UserService.GetUserByUsername(username.(string), nil)
 	if err != nil {
 		log.Printf("get user error: %v", err)
 		response.BuildErrorResponse(err, c)

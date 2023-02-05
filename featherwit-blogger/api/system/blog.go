@@ -22,7 +22,7 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 	get, _ := c.Get("User-Info")
 	tkmp := get.(map[string]interface{})
 	username, ok := tkmp["username"].(string)
-	user, err := UserService.GetUserByUsername(username)
+	user, err := UserService.GetUserByUsername(username, nil)
 	if err != nil {
 		log.Printf("select user error: %v", err)
 		response.BuildErrorResponse(err, c)
@@ -43,7 +43,7 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 		Content:  param.Content,
 		Profile:  param.Profile,
 	}
-	err = BlogService.AddBlog(blog)
+	err = BlogService.AddBlog(blog, nil)
 	if err != nil {
 		response.BuildErrorResponse(err, c)
 		return
@@ -62,7 +62,7 @@ func (b *BlogApi) SearchBlog(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
 		return
 	}
-	blogs, err := BlogService.SearchBlog(param.Limit, param.Offset)
+	blogs, err := BlogService.SearchBlog(param.Limit, param.Offset, nil)
 	if err != nil {
 		log.Printf("search blog error:%v", err)
 		response.BuildErrorResponse(err, c)
@@ -78,7 +78,7 @@ func (b *BlogApi) GetBlogById(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
 		return
 	}
-	blog, err := BlogService.GetBlogById(bid.ID)
+	blog, err := BlogService.GetBlogById(bid.ID, nil)
 	if err != nil {
 		log.Printf("select by id error: %v", err)
 		response.BuildErrorResponse(err, c)
@@ -101,7 +101,7 @@ func (b *BlogApi) UpdateBlog(c *gin.Context) {
 	val, _ := c.Get("User-Info")
 	tkmp := val.(map[string]interface{})
 	username := tkmp["username"].(string)
-	exist, err := BlogService.BlogExist(param.ID)
+	exist, err := BlogService.BlogExist(param.ID, nil)
 	if err != nil {
 		log.Printf("get blog error: %v", err)
 		response.BuildErrorResponse(err, c)
@@ -115,7 +115,7 @@ func (b *BlogApi) UpdateBlog(c *gin.Context) {
 		Username: username,
 		Title:    param.Title,
 		Content:  param.Content,
-	})
+	}, nil)
 	if err != nil {
 		log.Printf("update blog error:%v", err)
 		response.BuildErrorResponse(err, c)
@@ -125,7 +125,7 @@ func (b *BlogApi) UpdateBlog(c *gin.Context) {
 }
 
 func (b *BlogApi) GetBlogCount(c *gin.Context) {
-	n, err := BlogService.BlogCount()
+	n, err := BlogService.BlogCount(nil)
 	if err != nil {
 		response.BuildErrorResponse(err, c)
 		return

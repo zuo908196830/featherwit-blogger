@@ -4,14 +4,17 @@ import (
 	"featherwit-blogger/global"
 	"featherwit-blogger/model"
 	"log"
+
+	"xorm.io/xorm"
 )
 
 type CommentService struct{}
 
 var CommentServiceApp = new(CommentService)
 
-func (cs *CommentService) AddComment(comment *model.Comment) error {
-	_, err := global.DbEngine.Insert(comment)
+func (cs *CommentService) AddComment(comment *model.Comment, s *xorm.Session) error {
+	s = cs.SetSession(s)
+	_, err := s.Insert(comment)
 	if err != nil {
 		return err
 	} else {
@@ -19,9 +22,10 @@ func (cs *CommentService) AddComment(comment *model.Comment) error {
 	}
 }
 
-func (cs *CommentService) ContentCountPlus1(id int64) (bool, error) {
+func (cs *CommentService) UpdateCommentCount(id int64, num int, s *xorm.Session) (bool, error) {
+	s = cs.SetSession(s)
 	comment := &model.Comment{}
-	ok, err := global.DbEngine.Cols("comment_count").Where("id = ?", id).Get(comment)
+	ok, err := s.Cols("comment_count").Where("id = ?", id).Get(comment)
 	if err != nil {
 		log.Printf("get comment error:%v", err)
 		return false, err
@@ -29,9 +33,10 @@ func (cs *CommentService) ContentCountPlus1(id int64) (bool, error) {
 		log.Printf("comment is not exist")
 		return false, nil
 	}
-	mp := make(map[string]int64)
-	mp["comment_count"] = comment.CommentCount + 1
-	i, err := global.DbEngine.Table(comment).Where("id = ?", id).Update(mp)
+	mp := make(map[string]interface{})
+	mp["comment_count"] = comment.CommentCount + int64(num)
+	mp["has_child"] = true
+	i, err := s.Table(comment).Where("id = ?", id).Update(mp)
 	if err != nil {
 		log.Printf("update comment error:%v", err)
 		return false, err
@@ -42,9 +47,10 @@ func (cs *CommentService) ContentCountPlus1(id int64) (bool, error) {
 	return true, nil
 }
 
-func (cs *CommentService) GetCommentById(id int64) (*model.Comment, error) {
+func (cs *CommentService) GetCommentById(id int64, s *xorm.Session) (*model.Comment, error) {
+	s = cs.SetSession(s)
 	comment := &model.Comment{}
-	has, err := global.DbEngine.Where("id = ?", id).Get(comment)
+	has, err := s.Where("id = ?", id).Get(comment)
 	if err != nil {
 		log.Printf("select comment error:%v", err)
 		return nil, err
@@ -55,8 +61,9 @@ func (cs *CommentService) GetCommentById(id int64) (*model.Comment, error) {
 	return comment, nil
 }
 
-func (cs *CommentService) CommentExist(id int64) (bool, error) {
-	has, err := global.DbEngine.Exist(&model.Comment{ID: id})
+func (cs *CommentService) CommentExist(id int64, s *xorm.Session) (bool, error) {
+	s = cs.SetSession(s)
+	has, err := s.Exist(&model.Comment{ID: id})
 	if err != nil {
 		log.Printf("select comment error:%v", err)
 		return false, err
@@ -64,9 +71,10 @@ func (cs *CommentService) CommentExist(id int64) (bool, error) {
 	return has, nil
 }
 
-func (cs *CommentService) SearchCommentByParentId(parentId int64) ([]*model.Comment, error) {
+func (cs *CommentService) SearchCommentByParentId(parentId int64, s *xorm.Session) ([]*model.Comment, error) {
+	s = cs.SetSession(s)
 	commentIdList := make([]*model.Comment, 0)
-	err := global.DbEngine.Cols("id").Where("parent_id = ?", parentId).Find(&commentIdList)
+	err := s.Cols("id").Where("parent_id = ?", parentId).Find(&commentIdList)
 	if err != nil {
 		log.Printf("search id from comments error:%v", err)
 		return nil, err
@@ -74,12 +82,31 @@ func (cs *CommentService) SearchCommentByParentId(parentId int64) ([]*model.Comm
 	return commentIdList, err
 }
 
-func (cs *CommentService) DeleteCommentById(idList []int64) error {
+func (cs *CommentService) DeleteCommentById(idList []int64, s *xorm.Session) error {
+	s = cs.SetSession(s)
 	comment := &model.Comment{}
-	_, err := global.DbEngine.In("id", idList).Delete(comment)
+	_, err := s.In("id", idList).Delete(comment)
 	if err != nil {
 		log.Printf("delete comment error:%v", err)
 		return err
 	}
 	return nil
+}
+
+func (cs *CommentService) GetCommentByBlogId(blogId int64, s *xorm.Session) ([]*model.Comment, error) {
+	s = cs.SetSession(s)
+	comments := make([]*model.Comment, 0)
+	err := s.Where("blogId = ?", blogId).Find(comments)
+	if err != nil {
+		log.Printf("select comment by blog id error:%v", err)
+		return nil, err
+	}
+	return comments, nil
+}
+
+func (cs *CommentService) SetSession(s *xorm.Session) *xorm.Session {
+	if s == nil {
+		return global.DbEngine.NewSession()
+	}
+	return s
 }

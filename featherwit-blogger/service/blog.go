@@ -1,17 +1,19 @@
 package service
 
 import (
-	"featherwit-blogger/global"
 	"featherwit-blogger/model"
 	"log"
+
+	"xorm.io/xorm"
 )
 
 type BlogService struct{}
 
 var BlogServiceApp = new(BlogService)
 
-func (b *BlogService) AddBlog(blog *model.Blob) error {
-	_, err := global.DbEngine.Insert(blog)
+func (b *BlogService) AddBlog(blog *model.Blob, s *xorm.Session) error {
+	s = CommentServiceApp.SetSession(s)
+	_, err := s.Insert(blog)
 	if err != nil {
 		log.Printf("add blog error: %v", err)
 		return err
@@ -19,9 +21,10 @@ func (b *BlogService) AddBlog(blog *model.Blob) error {
 	return nil
 }
 
-func (b *BlogService) SearchBlog(limit int, offset int) ([]*model.Blob, error) {
+func (b *BlogService) SearchBlog(limit int, offset int, s *xorm.Session) ([]*model.Blob, error) {
+	s = CommentServiceApp.SetSession(s)
 	blogs := make([]*model.Blob, 0)
-	err := global.DbEngine.Cols("id", "username", "create_at", "update_at", "title", "views", "comment_count", "like_count").Limit(limit, offset).Find(&blogs)
+	err := s.Cols("id", "username", "create_at", "update_at", "title", "views", "comment_count", "like_count").Limit(limit, offset).Find(&blogs)
 	if err != nil {
 		log.Printf("search blog error: %v", err)
 		return nil, err
@@ -29,9 +32,10 @@ func (b *BlogService) SearchBlog(limit int, offset int) ([]*model.Blob, error) {
 	return blogs, nil
 }
 
-func (b *BlogService) GetBlogById(id int64) (*model.Blob, error) {
+func (b *BlogService) GetBlogById(id int64, s *xorm.Session) (*model.Blob, error) {
+	s = CommentServiceApp.SetSession(s)
 	blog := &model.Blob{ID: id}
-	ok, err := global.DbEngine.Get(blog)
+	ok, err := s.Get(blog)
 	if err != nil {
 		return nil, err
 	} else if !ok {
@@ -40,24 +44,27 @@ func (b *BlogService) GetBlogById(id int64) (*model.Blob, error) {
 	return blog, nil
 }
 
-func (b *BlogService) BlogExist(id int64) (bool, error) {
-	exist, err := global.DbEngine.Exist(&model.Blob{ID: id})
+func (b *BlogService) BlogExist(id int64, s *xorm.Session) (bool, error) {
+	s = CommentServiceApp.SetSession(s)
+	exist, err := s.Exist(&model.Blob{ID: id})
 	if err != nil {
 		return false, err
 	}
 	return exist, err
 }
 
-func (b *BlogService) UpdateBlog(blog *model.Blob) error {
-	_, err := global.DbEngine.Where("id = ?", blog.ID).Update(blog)
+func (b *BlogService) UpdateBlog(blog *model.Blob, s *xorm.Session) error {
+	s = CommentServiceApp.SetSession(s)
+	_, err := s.Where("id = ?", blog.ID).Update(blog)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (b *BlogService) BlogCount() (int64, error) {
-	n, err := global.DbEngine.Count(new(model.Blob))
+func (b *BlogService) BlogCount(s *xorm.Session) (int64, error) {
+	s = CommentServiceApp.SetSession(s)
+	n, err := s.Count(new(model.Blob))
 	if err != nil {
 		log.Printf("get blog error:%v", err)
 		return 0, err
@@ -65,9 +72,10 @@ func (b *BlogService) BlogCount() (int64, error) {
 	return n, nil
 }
 
-func (b *BlogService) ContentCountPlus1(blogId int64) (bool, error) {
+func (b *BlogService) UpdateCommentCount(blogId int64, num int, s *xorm.Session) (bool, error) {
+	s = CommentServiceApp.SetSession(s)
 	blog := &model.Blob{}
-	ok, err := global.DbEngine.Cols("comment_count").Where("id = ?", blogId).Get(blog)
+	ok, err := s.Cols("comment_count").Where("id = ?", blogId).Get(blog)
 	if err != nil {
 		log.Printf("get blog error:%v", err)
 		return false, err
@@ -76,8 +84,8 @@ func (b *BlogService) ContentCountPlus1(blogId int64) (bool, error) {
 		return false, nil
 	}
 	mp := make(map[string]int64)
-	mp["comment_count"] = blog.CommentCount + 1
-	i, err := global.DbEngine.Table(blog).Where("id = ?", blogId).Update(mp)
+	mp["comment_count"] = blog.CommentCount + int64(num)
+	i, err := s.Table(blog).Where("id = ?", blogId).Update(mp)
 	if err != nil {
 		log.Printf("update blog error:%v", err)
 		return false, err

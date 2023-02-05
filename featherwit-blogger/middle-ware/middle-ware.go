@@ -41,7 +41,7 @@ func TokenMiddleWare() gin.HandlerFunc {
 				return
 			}
 			c.Set("User-Info", pkmp)
-			ok, err := service.UserServiceApp.LoginStatus(pkmp)
+			ok, err := service.UserServiceApp.LoginStatus(pkmp, nil)
 			if err != nil {
 				response.BuildErrorResponse(err, c)
 				c.Abort()

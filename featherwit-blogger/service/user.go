@@ -1,19 +1,21 @@
 package service
 
 import (
-	"featherwit-blogger/global"
 	"featherwit-blogger/model"
 	"featherwit-blogger/model/errors"
 	"log"
+
+	"xorm.io/xorm"
 )
 
 type UserService struct{}
 
 var UserServiceApp = new(UserService)
 
-func (u *UserService) GetUserByUsername(username string) (*model.User, error) {
+func (u *UserService) GetUserByUsername(username string, s *xorm.Session) (*model.User, error) {
+	s = CommentServiceApp.SetSession(s)
 	user := new(model.User)
-	ok, err := global.DbEngine.Where("username = ?", username).Get(user)
+	ok, err := s.Where("username = ?", username).Get(user)
 	if err != nil {
 		return nil, err
 	} else if !ok {
@@ -23,8 +25,9 @@ func (u *UserService) GetUserByUsername(username string) (*model.User, error) {
 	}
 }
 
-func (u *UserService) AddUser(user *model.User) error {
-	_, err := global.DbEngine.Insert(user)
+func (u *UserService) AddUser(user *model.User, s *xorm.Session) error {
+	s = CommentServiceApp.SetSession(s)
+	_, err := s.Insert(user)
 	if err != nil {
 		return err
 	} else {
@@ -32,7 +35,8 @@ func (u *UserService) AddUser(user *model.User) error {
 	}
 }
 
-func (u *UserService) LoginStatus(user map[string]interface{}) (bool, error) {
+func (u *UserService) LoginStatus(user map[string]interface{}, s *xorm.Session) (bool, error) {
+	s = CommentServiceApp.SetSession(s)
 	username, ok := user["username"]
 	if !ok {
 		return false, errors.NewError(errors.TokenWrong, nil)

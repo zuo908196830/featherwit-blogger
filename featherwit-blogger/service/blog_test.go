@@ -19,7 +19,7 @@ func TestBlogService_AddBlog(t *testing.T) {
 		CommentCount: 0,
 		LikeCount:    0,
 	}
-	err := BlogServiceApp.AddBlog(blog)
+	err := BlogServiceApp.AddBlog(blog, nil)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
@@ -28,7 +28,7 @@ func TestBlogService_AddBlog(t *testing.T) {
 
 func TestBlogService_SearchBlog(t *testing.T) {
 	global.InitGlobal()
-	blogs, err := BlogServiceApp.SearchBlog(2, 1)
+	blogs, err := BlogServiceApp.SearchBlog(2, 1, nil)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
@@ -39,7 +39,7 @@ func TestBlogService_SearchBlog(t *testing.T) {
 
 func TestBlogService_GetBlogById(t *testing.T) {
 	global.InitGlobal()
-	blob, err := BlogServiceApp.GetBlogById(1)
+	blob, err := BlogServiceApp.GetBlogById(1, nil)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
@@ -48,7 +48,7 @@ func TestBlogService_GetBlogById(t *testing.T) {
 
 func TestBlogService_BlogExist(t *testing.T) {
 	global.InitGlobal()
-	exist, err := BlogServiceApp.BlogExist(1)
+	exist, err := BlogServiceApp.BlogExist(1, nil)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
@@ -57,7 +57,7 @@ func TestBlogService_BlogExist(t *testing.T) {
 
 func TestBlogService_ContentCountPlus1(t *testing.T) {
 	global.InitGlobal()
-	b, err := BlogServiceApp.ContentCountPlus1(1)
+	b, err := BlogServiceApp.UpdateCommentCount(1, 1, nil)
 	if err != nil {
 		log.Fatalf("%v", err)
 	} else if !b {

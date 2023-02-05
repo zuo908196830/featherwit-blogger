@@ -8,7 +8,7 @@ import (
 
 func TestSearchCommentByParentId(t *testing.T) {
 	global.InitGlobal()
-	idList, err := CommentServiceApp.SearchCommentByParentId(1)
+	idList, err := CommentServiceApp.SearchCommentByParentId(1, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -20,7 +20,7 @@ func TestSearchCommentByParentId(t *testing.T) {
 func TestDeleteCommentById(t *testing.T) {
 	global.InitGlobal()
 	idList := []int64{5, 7}
-	err := CommentServiceApp.DeleteCommentById(idList)
+	err := CommentServiceApp.DeleteCommentById(idList, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}

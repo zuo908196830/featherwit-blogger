@@ -6,7 +6,3 @@ type AddComment struct {
 	ReplyId  int64  `json:"replyId"`  //如果是回复某二级评论的评论，二级评论id，否则为负数
 	Content  string `json:"Content"`
 }
-
-type CommentId struct {
-	ID int64 `json:"commentId" uri:"commentId"`
-}
