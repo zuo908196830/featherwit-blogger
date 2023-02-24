@@ -21,6 +21,7 @@ func Init() *gin.Engine {
 		RouterGroupApp.systemRouter.InitUserRouter(outRouter)
 		RouterGroupApp.systemRouter.InitBlogRouter(outRouter)
 		RouterGroupApp.systemRouter.InitCommentRouter(outRouter)
+		RouterGroupApp.systemRouter.InitTagRouter(outRouter)
 	}
 	return Router
 }

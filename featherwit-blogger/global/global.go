@@ -28,6 +28,8 @@ func InitDbEngine() {
 		new(model.User),
 		new(model.Blog),
 		new(model.Comment),
+		new(model.Tag),
+		new(model.TagBlog),
 	)
 	if err != nil {
 		log.Fatalf("create table error:%v", err)
