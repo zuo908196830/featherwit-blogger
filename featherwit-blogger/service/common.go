@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"featherwit-blogger/global"
 	"log"
+
+	"xorm.io/xorm"
 )
 
 type CommonService struct{}
@@ -69,4 +71,11 @@ func (c *CommonService) RedisDelete(key string) error {
 		return err
 	}
 	return nil
+}
+
+func (cs *CommonService) SetSession(s *xorm.Session) *xorm.Session {
+	if s == nil {
+		return global.DbEngine.NewSession()
+	}
+	return s
 }

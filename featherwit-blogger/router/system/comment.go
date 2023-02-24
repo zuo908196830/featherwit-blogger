@@ -15,5 +15,6 @@ func (cr *CommentRouter) InitCommentRouter(Router *gin.RouterGroup) {
 	{
 		commentRouter.POST("add", middle_ware.ConsumerToken(), commentApi.AddComment)
 		commentRouter.DELETE(":commentId", middle_ware.ConsumerToken(), commentApi.DeleteComment)
+		commentRouter.GET(":blogId/:limit/:offset", commentApi.GetComment)
 	}
 }

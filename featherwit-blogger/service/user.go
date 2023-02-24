@@ -13,7 +13,7 @@ type UserService struct{}
 var UserServiceApp = new(UserService)
 
 func (u *UserService) GetUserByUsername(username string, s *xorm.Session) (*model.User, error) {
-	s = CommentServiceApp.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	user := new(model.User)
 	ok, err := s.Where("username = ?", username).Get(user)
 	if err != nil {
@@ -26,7 +26,7 @@ func (u *UserService) GetUserByUsername(username string, s *xorm.Session) (*mode
 }
 
 func (u *UserService) AddUser(user *model.User, s *xorm.Session) error {
-	s = CommentServiceApp.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	_, err := s.Insert(user)
 	if err != nil {
 		return err
@@ -36,7 +36,7 @@ func (u *UserService) AddUser(user *model.User, s *xorm.Session) error {
 }
 
 func (u *UserService) LoginStatus(user map[string]interface{}, s *xorm.Session) (bool, error) {
-	s = CommentServiceApp.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	username, ok := user["username"]
 	if !ok {
 		return false, errors.NewError(errors.TokenWrong, nil)

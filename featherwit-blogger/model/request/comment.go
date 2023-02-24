@@ -6,3 +6,9 @@ type AddComment struct {
 	ReplyId  int64  `json:"replyId"`  //如果是回复某二级评论的评论，二级评论id，否则为负数
 	Content  string `json:"Content"`
 }
+
+type GetBlogComment struct {
+	BlogId int64 `json:"blogId" uri:"blogId"`
+	Limit  int   `json:"limit" uri:"limit"`
+	Offset int   `json:"offset" uri:"offset"`
+}

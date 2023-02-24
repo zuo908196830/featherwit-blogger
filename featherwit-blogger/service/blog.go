@@ -12,7 +12,7 @@ type BlogService struct{}
 var BlogServiceApp = new(BlogService)
 
 func (b *BlogService) AddBlog(blog *model.Blob, s *xorm.Session) error {
-	s = CommentServiceApp.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	_, err := s.Insert(blog)
 	if err != nil {
 		log.Printf("add blog error: %v", err)
@@ -22,7 +22,7 @@ func (b *BlogService) AddBlog(blog *model.Blob, s *xorm.Session) error {
 }
 
 func (b *BlogService) SearchBlog(limit int, offset int, s *xorm.Session) ([]*model.Blob, error) {
-	s = CommentServiceApp.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	blogs := make([]*model.Blob, 0)
 	err := s.Cols("id", "username", "create_at", "update_at", "title", "views", "comment_count", "like_count").Limit(limit, offset).Find(&blogs)
 	if err != nil {
@@ -33,7 +33,7 @@ func (b *BlogService) SearchBlog(limit int, offset int, s *xorm.Session) ([]*mod
 }
 
 func (b *BlogService) GetBlogById(id int64, s *xorm.Session) (*model.Blob, error) {
-	s = CommentServiceApp.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	blog := &model.Blob{ID: id}
 	ok, err := s.Get(blog)
 	if err != nil {
@@ -45,7 +45,7 @@ func (b *BlogService) GetBlogById(id int64, s *xorm.Session) (*model.Blob, error
 }
 
 func (b *BlogService) BlogExist(id int64, s *xorm.Session) (bool, error) {
-	s = CommentServiceApp.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	exist, err := s.Exist(&model.Blob{ID: id})
 	if err != nil {
 		return false, err
@@ -54,7 +54,7 @@ func (b *BlogService) BlogExist(id int64, s *xorm.Session) (bool, error) {
 }
 
 func (b *BlogService) UpdateBlog(blog *model.Blob, s *xorm.Session) error {
-	s = CommentServiceApp.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	_, err := s.Where("id = ?", blog.ID).Update(blog)
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func (b *BlogService) UpdateBlog(blog *model.Blob, s *xorm.Session) error {
 }
 
 func (b *BlogService) BlogCount(s *xorm.Session) (int64, error) {
-	s = CommentServiceApp.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	n, err := s.Count(new(model.Blob))
 	if err != nil {
 		log.Printf("get blog error:%v", err)
@@ -73,7 +73,7 @@ func (b *BlogService) BlogCount(s *xorm.Session) (int64, error) {
 }
 
 func (b *BlogService) UpdateCommentCount(blogId int64, num int, s *xorm.Session) (bool, error) {
-	s = CommentServiceApp.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	blog := &model.Blob{}
 	ok, err := s.Cols("comment_count").Where("id = ?", blogId).Get(blog)
 	if err != nil {

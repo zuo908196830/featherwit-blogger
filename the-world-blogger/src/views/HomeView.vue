@@ -1,15 +1,29 @@
 <template>
     <div>
         <div>
-            <el-link v-for="(blog, index) of blogs" :key="index">{{ blog.title }}</el-link>
+            <ul>
+                <li v-for="(blog, index) of blogs" :key="index" style="list-style-type: none;">
+                    <div class="blogs">
+                        <div class="blogsLink">
+                            <el-link style="font-size:large; font-weight:bolder;">{{
+                                blog.title
+                            }}</el-link>
+                        </div>
+                        <div class="blogsCover">
+                            <!-- 封面 -->
+                        </div>
+                        <div class="blogsProfile">
+                            <!-- 简介 -->
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
-        <el-pagination
-            layout="prev, pager, next"
-            :total="total"
-            :page-size="limit"
-            :current-page.sync="page"
-            @current-change="changePage">
-        </el-pagination>
+        <div style="position: absolute; left: 35%;">
+            <el-pagination layout="prev, pager, next" :total="total" :page-size="limit" :current-page.sync="page"
+                @current-change="changePage">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -28,7 +42,7 @@ export default {
     },
     methods: {
         changePage() {
-            alert(this.page)
+            this.getBlogs()
         },
         getTotal() {
             axios.get('/api/blog/count').then(res => {
@@ -58,3 +72,11 @@ export default {
     },
 }
 </script>
+
+<style>
+.blogs {
+    height: 150px;
+    border:1px solid #dedede;
+    border-collapse:collapse;
+}
+</style>

@@ -13,5 +13,8 @@ type Comment struct {
 	Content      string    `json:"Content" xorm:"text"`
 	LikeCount    int64     `json:"likeCount" xorm:"bigint default 0"`
 	CommentCount int64     `json:"commentCount" xorm:"bigint default 0"`
-	HasChild     bool      `json:"hasChild" xorm:"bool default 0"`
+}
+
+func (c *Comment) TableName() string {
+	return "comment"
 }

@@ -144,7 +144,8 @@ func (ca *CommentApi) DeleteComment(c *gin.Context) {
 		}
 	}
 	// 先删除子评论，再删除自身
-	children, err := CommentService.SearchCommentByParentId(commentId, session)
+	comments := []int64{commentId}
+	children, err := CommentService.SearchCommentByParentId(comments, session)
 	if err != nil {
 		session.Rollback()
 		response.BuildErrorResponse(err, c)
@@ -176,17 +177,36 @@ func (ca *CommentApi) DeleteComment(c *gin.Context) {
 }
 
 func (ca *CommentApi) GetComment(c *gin.Context) {
-	// s := c.Param("blogId")
-	// blogId, err := strconv.ParseInt(s, 10, 64)
-	// if err != nil {
-	// 	log.Printf("strconv error:%v", err)
-	// 	response.BuildErrorResponse(err, c)
-	// 	return
-	// }
-	// comments, err := CommentService.GetCommentByBlogId(blogId)
-	// if err != nil {
-	// 	response.BuildErrorResponse(err, c)
-	// 	return
-	// }
-
+	var param request.GetBlogComment
+	err := c.ShouldBindUri(&param)
+	if err != nil {
+		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
+		return
+	}
+	if err != nil {
+		log.Printf("strconv error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	session := global.DbEngine.NewSession()
+	defer session.Close()
+	comments, err := CommentService.GetCommentByBlogId(param.BlogId, param.Limit, param.Offset, session)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	// todo 通过一级评论去查找对应的二级评论
+	commentTree := make([]*response.CommentsTree, 0)
+	for _, comment := range comments {
+		children, err := CommentService.GetCommentByParentID(comment.ID, 3, 0, session)
+		if err != nil {
+			response.BuildErrorResponse(err, c)
+			return
+		}
+		commentTree = append(commentTree, &response.CommentsTree{
+			Comment:         comment,
+			ChildrenComment: children,
+		})
+	}
+	response.BuildOkResponse(0, commentTree, c)
 }

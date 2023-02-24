@@ -1,7 +1,6 @@
 package service
 
 import (
-	"featherwit-blogger/global"
 	"featherwit-blogger/model"
 	"log"
 
@@ -13,7 +12,7 @@ type CommentService struct{}
 var CommentServiceApp = new(CommentService)
 
 func (cs *CommentService) AddComment(comment *model.Comment, s *xorm.Session) error {
-	s = cs.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	_, err := s.Insert(comment)
 	if err != nil {
 		return err
@@ -23,7 +22,7 @@ func (cs *CommentService) AddComment(comment *model.Comment, s *xorm.Session) er
 }
 
 func (cs *CommentService) UpdateCommentCount(id int64, num int, s *xorm.Session) (bool, error) {
-	s = cs.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	comment := &model.Comment{}
 	ok, err := s.Cols("comment_count").Where("id = ?", id).Get(comment)
 	if err != nil {
@@ -48,7 +47,7 @@ func (cs *CommentService) UpdateCommentCount(id int64, num int, s *xorm.Session)
 }
 
 func (cs *CommentService) GetCommentById(id int64, s *xorm.Session) (*model.Comment, error) {
-	s = cs.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	comment := &model.Comment{}
 	has, err := s.Where("id = ?", id).Get(comment)
 	if err != nil {
@@ -62,7 +61,7 @@ func (cs *CommentService) GetCommentById(id int64, s *xorm.Session) (*model.Comm
 }
 
 func (cs *CommentService) CommentExist(id int64, s *xorm.Session) (bool, error) {
-	s = cs.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	has, err := s.Exist(&model.Comment{ID: id})
 	if err != nil {
 		log.Printf("select comment error:%v", err)
@@ -71,10 +70,10 @@ func (cs *CommentService) CommentExist(id int64, s *xorm.Session) (bool, error) 
 	return has, nil
 }
 
-func (cs *CommentService) SearchCommentByParentId(parentId int64, s *xorm.Session) ([]*model.Comment, error) {
-	s = cs.SetSession(s)
+func (cs *CommentService) SearchCommentByParentId(parentId []int64, s *xorm.Session) ([]*model.Comment, error) {
+	s = CommonServiceApp.SetSession(s)
 	commentIdList := make([]*model.Comment, 0)
-	err := s.Cols("id").Where("parent_id = ?", parentId).Find(&commentIdList)
+	err := s.Cols("id").In("parent_id = ?", parentId).Find(&commentIdList)
 	if err != nil {
 		log.Printf("search id from comments error:%v", err)
 		return nil, err
@@ -83,7 +82,7 @@ func (cs *CommentService) SearchCommentByParentId(parentId int64, s *xorm.Sessio
 }
 
 func (cs *CommentService) DeleteCommentById(idList []int64, s *xorm.Session) error {
-	s = cs.SetSession(s)
+	s = CommonServiceApp.SetSession(s)
 	comment := &model.Comment{}
 	_, err := s.In("id", idList).Delete(comment)
 	if err != nil {
@@ -93,10 +92,10 @@ func (cs *CommentService) DeleteCommentById(idList []int64, s *xorm.Session) err
 	return nil
 }
 
-func (cs *CommentService) GetCommentByBlogId(blogId int64, s *xorm.Session) ([]*model.Comment, error) {
-	s = cs.SetSession(s)
+func (cs *CommentService) GetCommentByBlogId(blogId int64, limit int, offset int, s *xorm.Session) ([]*model.Comment, error) {
+	s = CommonServiceApp.SetSession(s)
 	comments := make([]*model.Comment, 0)
-	err := s.Where("blogId = ?", blogId).Find(comments)
+	err := s.Where("blog_id = ?", blogId).And("parent_id < 0").Limit(limit, offset).Find(&comments)
 	if err != nil {
 		log.Printf("select comment by blog id error:%v", err)
 		return nil, err
@@ -104,9 +103,13 @@ func (cs *CommentService) GetCommentByBlogId(blogId int64, s *xorm.Session) ([]*
 	return comments, nil
 }
 
-func (cs *CommentService) SetSession(s *xorm.Session) *xorm.Session {
-	if s == nil {
-		return global.DbEngine.NewSession()
+func (cs *CommentService) GetCommentByParentID(parentId int64, limit int, offset int, s *xorm.Session) ([]*model.Comment, error) {
+	s = CommonServiceApp.SetSession(s)
+	comments := make([]*model.Comment, 0)
+	err := s.Where("parent_id = ?", parentId).Limit(limit, offset).Find(&comments)
+	if err != nil {
+		log.Printf("select comment by parentId error:%v", err)
+		return nil, err
 	}
-	return s
+	return comments, nil
 }
