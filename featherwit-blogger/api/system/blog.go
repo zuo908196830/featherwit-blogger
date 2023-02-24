@@ -37,7 +37,7 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.TokenWrong, "username is not exist"), c)
 		return
 	}
-	blog := &model.Blob{
+	blog := &model.Blog{
 		Username: user.Username,
 		Title:    param.Title,
 		Content:  param.Content,
@@ -110,7 +110,7 @@ func (b *BlogApi) UpdateBlog(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "blog is not exist"), c)
 		return
 	}
-	err = BlogService.UpdateBlog(&model.Blob{
+	err = BlogService.UpdateBlog(&model.Blog{
 		ID:       param.ID,
 		Username: username,
 		Title:    param.Title,

@@ -26,7 +26,7 @@ func InitDbEngine() {
 	DbEngine.ShowSQL(true)
 	err := DbEngine.Sync2(
 		new(model.User),
-		new(model.Blob),
+		new(model.Blog),
 		new(model.Comment),
 	)
 	if err != nil {

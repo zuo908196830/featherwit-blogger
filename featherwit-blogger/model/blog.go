@@ -2,7 +2,7 @@ package model
 
 import "time"
 
-type Blob struct {
+type Blog struct {
 	ID           int64     `json:"id" xorm:"bigint not null pk id autoincr"`
 	CreateAt     time.Time `json:"createAt" xorm:"created"`
 	UpdateAt     time.Time `json:"updateAt" xorm:"updated"`
@@ -16,6 +16,6 @@ type Blob struct {
 	Profile      string    `json:"profile" xorm:"text"`       //文章简介
 }
 
-func (b *Blob) TableName() string {
+func (b *Blog) TableName() string {
 	return "blog"
 }

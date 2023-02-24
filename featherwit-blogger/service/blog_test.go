@@ -11,7 +11,7 @@ import (
 
 func TestBlogService_AddBlog(t *testing.T) {
 	global.InitGlobal()
-	blog := &model.Blob{
+	blog := &model.Blog{
 		Username:     "123",
 		Title:        "123",
 		Content:      "123",
@@ -39,11 +39,11 @@ func TestBlogService_SearchBlog(t *testing.T) {
 
 func TestBlogService_GetBlogById(t *testing.T) {
 	global.InitGlobal()
-	blob, err := BlogServiceApp.GetBlogById(1, nil)
+	blog, err := BlogServiceApp.GetBlogById(1, nil)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-	log.Printf("%v", blob)
+	log.Printf("%v", blog)
 }
 
 func TestBlogService_BlogExist(t *testing.T) {
