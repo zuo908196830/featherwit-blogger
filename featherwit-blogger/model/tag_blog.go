@@ -11,3 +11,7 @@ type TagBlog struct {
 	CreateAt time.Time `json:"createAt" xorm:"created"`
 	UpdateAt time.Time `json:"updateAt" xorm:"updated"`
 }
+
+func (tb *TagBlog) TableName() string {
+	return "tag_blog"
+}

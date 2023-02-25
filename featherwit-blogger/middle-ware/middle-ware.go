@@ -56,7 +56,7 @@ func TokenMiddleWare() gin.HandlerFunc {
 	}
 }
 
-func ConsumerToken() gin.HandlerFunc {
+func LoginToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ok, exists := c.Get("login-status")
 		if exists && ok.(bool) {
