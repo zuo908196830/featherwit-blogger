@@ -120,3 +120,23 @@ func (ts *TagService) SearchTag(s *xorm.Session) (*[]*response.SearchTagResponse
 	}
 	return &res, nil
 }
+
+func (ts *TagService) DeleteTagBlogByBlogId(blogId int64, s *xorm.Session) (bool, error) {
+	s = CommonServiceApp.SetSession(s)
+	var tagBlog model.TagBlog
+	num, err := s.Where("blog_id = ?", blogId).Count(&tagBlog)
+	if err != nil {
+		log.Printf("select tagBlog error:%v", err)
+		return false, err
+	}
+	deleteNum, err := s.Where("blog_id = ?", blogId).Delete(&tagBlog)
+	if err != nil {
+		log.Printf("delete tagBlog error:%v", err)
+		return false, err
+	}
+	if num != deleteNum {
+		log.Printf("delete tagBlog error:%v", err)
+		return false, nil
+	}
+	return true, nil
+}

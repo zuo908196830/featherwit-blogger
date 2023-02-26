@@ -16,5 +16,6 @@ func (t *TagRouter) InitTagRouter(Router *gin.RouterGroup) {
 		tagRouter.POST("add/tree", middle_ware.LoginToken(), middle_ware.AdministratorsToken(), tagApi.AddTag)
 		tagRouter.POST("add/tag/blog", middle_ware.LoginToken(), tagApi.AddTagBlog)
 		tagRouter.GET("search", tagApi.SearchTag)
+		tagRouter.DELETE("delete/blog/:blogId", middle_ware.LoginToken(), tagApi.DeleteTagBlog)
 	}
 }

@@ -26,6 +26,7 @@ func init() {
 		ErrorMap[BadRequest] = "bad request"
 		ErrorMap[PasswordWrong] = "password wrong"
 		ErrorMap[TokenWrong] = "token wrong"
+		ErrorMap[ActionFail] = "action fail"
 	}
 }
 

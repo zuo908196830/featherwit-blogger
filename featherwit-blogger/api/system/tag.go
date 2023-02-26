@@ -6,6 +6,7 @@ import (
 	"featherwit-blogger/model/errors"
 	"featherwit-blogger/model/request"
 	"featherwit-blogger/model/response"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -64,6 +65,45 @@ func (t *TagApi) AddTagBlog(c *gin.Context) {
 	if err := TagService.AddTagBlog(param.BlogId, &param.Tags, session); err != nil {
 		session.Rollback()
 		response.BuildErrorResponse(err, c)
+		return
+	}
+	session.Commit()
+	response.BuildOkResponse(0, nil, c)
+}
+
+func (t *TagApi) DeleteTagBlog(c *gin.Context) {
+	s := c.Param("blogId")
+	val, _ := c.Get("User-Info")
+	tkmp := val.(map[string]interface{})
+	username := tkmp["username"].(string)
+	blogId, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
+		return
+	}
+	session := global.DbEngine.NewSession()
+	defer session.Close()
+	if err := session.Begin(); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	blog, err := BlogService.GetBlogById(blogId, session)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	if blog.Username != username {
+		response.BuildErrorResponse(errors.NewError(errors.Unauthorized, nil), c)
+		return
+	}
+	ok, err := TagService.DeleteTagBlogByBlogId(blogId, session)
+	if err != nil {
+		session.Rollback()
+		response.BuildErrorResponse(err, c)
+		return
+	} else if !ok {
+		session.Rollback()
+		response.BuildErrorResponse(errors.NewError(errors.ActionFail, nil), c)
 		return
 	}
 	session.Commit()

@@ -9,4 +9,5 @@ const (
 	BadRequest           ErrorCode = 1003
 	PasswordWrong        ErrorCode = 1004
 	TokenWrong           ErrorCode = 1005
+	ActionFail           ErrorCode = 1007
 )
