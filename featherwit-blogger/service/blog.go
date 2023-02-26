@@ -95,3 +95,16 @@ func (b *BlogService) UpdateCommentCount(blogId int64, num int, s *xorm.Session)
 	}
 	return true, nil
 }
+
+func (b *BlogService) DeleteBlogById(id int64, s *xorm.Session) error {
+	s = CommonServiceApp.SetSession(s)
+	blog := &model.Blog{
+		ID: id,
+	}
+	_, err := s.Delete(blog)
+	if err != nil {
+		log.Printf("delete blog error:%v", err)
+		return err
+	}
+	return nil
+}

@@ -1,11 +1,13 @@
 package system
 
 import (
+	"featherwit-blogger/global"
 	"featherwit-blogger/model"
 	"featherwit-blogger/model/errors"
 	"featherwit-blogger/model/request"
 	"featherwit-blogger/model/response"
 	"log"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -133,4 +135,63 @@ func (b *BlogApi) GetBlogCount(c *gin.Context) {
 	response.BuildOkResponse(0, &response.BlogCountResponse{
 		Total: n,
 	}, c)
+}
+
+func (b *BlogApi) DeleteBlog(c *gin.Context) {
+	s := c.Param("blogId")
+	blogId, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	val, _ := c.Get("User-Info")
+	tkmp := val.(map[string]interface{})
+	username := tkmp["username"].(string)
+	session := global.DbEngine.NewSession()
+	defer session.Close()
+	if err := session.Begin(); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	// 验证权限
+	blog, err := BlogService.GetBlogById(blogId, session)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	if blog.Username != username {
+		response.BuildErrorResponse(errors.NewError(errors.Unauthorized, nil), c)
+		return
+	}
+	// 删除评论
+	ok, err := CommentService.DeleteCommentByBlogId(blogId, session)
+	if err != nil {
+		session.Rollback()
+		response.BuildErrorResponse(err, c)
+		return
+	} else if !ok {
+		session.Rollback()
+		response.BuildErrorResponse(errors.NewError(errors.ActionFail, nil), c)
+		return
+	}
+	// 删除blog与tag之间的绑定
+	ok, err = TagService.DeleteTagBlogByBlogId(blogId, session)
+	if err != nil {
+		session.Rollback()
+		response.BuildErrorResponse(err, c)
+		return
+	} else if !ok {
+		session.Rollback()
+		response.BuildErrorResponse(errors.NewError(errors.ActionFail, nil), c)
+		return
+	}
+	// 删除blog
+	err = BlogService.DeleteBlogById(blogId, session)
+	if err != nil {
+		session.Rollback()
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	session.Commit()
+	response.BuildOkResponse(0, nil, c)
 }

@@ -92,6 +92,26 @@ func (cs *CommentService) DeleteCommentById(idList []int64, s *xorm.Session) err
 	return nil
 }
 
+func (cs *CommentService) DeleteCommentByBlogId(blogId int64, s *xorm.Session) (bool, error) {
+	s = CommonServiceApp.SetSession(s)
+	var comment model.Comment
+	num, err := s.Where("blog_id = ?", blogId).Count(&comment)
+	if err != nil {
+		log.Printf("select comment count error:%v", err)
+		return false, err
+	}
+	deleteNum, err := s.Where("blog_id = ?", blogId).Delete(comment)
+	if err != nil {
+		log.Printf("delete comment error:%v", err)
+		return false, err
+	}
+	if num != deleteNum {
+		log.Printf("select num != delete num")
+		return false, nil
+	}
+	return true, nil
+}
+
 func (cs *CommentService) GetCommentByBlogId(blogId int64, limit int, offset int, s *xorm.Session) ([]*model.Comment, error) {
 	s = CommonServiceApp.SetSession(s)
 	comments := make([]*model.Comment, 0)
