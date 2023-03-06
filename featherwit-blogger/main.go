@@ -4,10 +4,11 @@ import (
 	"featherwit-blogger/global"
 	"featherwit-blogger/router"
 	"featherwit-blogger/server"
-	_ "github.com/go-sql-driver/mysql"
 	"os"
 	"os/signal"
 	"syscall"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
