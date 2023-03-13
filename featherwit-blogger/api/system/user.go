@@ -61,10 +61,8 @@ func (u *UserApi) Login(c *gin.Context) {
 }
 
 func (u *UserApi) Logout(c *gin.Context) {
-	get, _ := c.Get("User-Info")
-	tkmp := get.(map[string]interface{})
-	username := tkmp["username"]
-	CommonService.RedisDelete(username.(string))
+	username := CommonService.GetUsername(c)
+	CommonService.RedisDelete(username)
 	response.BuildOkResponse(0, nil, c)
 }
 
@@ -127,10 +125,8 @@ func (u *UserApi) Register(c *gin.Context) {
 }
 
 func (u *UserApi) GetUser(c *gin.Context) {
-	get, _ := c.Get("User-Info")
-	tkmp := get.(map[string]interface{})
-	username := tkmp["username"]
-	user, err := UserService.GetUserByUsername(username.(string), nil)
+	username := CommonService.GetUsername(c)
+	user, err := UserService.GetUserByUsername(username, nil)
 	if err != nil {
 		log.Printf("get user error: %v", err)
 		response.BuildErrorResponse(err, c)
@@ -163,4 +159,27 @@ func (u *UserApi) TokenLogin(c *gin.Context) {
 	value, _ := c.Get("User-Info")
 	tkmp := value.(map[string]interface{})
 	response.BuildOkResponse(0, tkmp, c)
+}
+
+func (u *UserApi) AttentionUser(c *gin.Context) {
+	var param request.Page
+	c.ShouldBindUri(&param)
+	username := CommonService.GetUsername(c)
+	usernames, err := UserService.SearchAttentionUser(username, param.Limit, param.Offset, nil)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	users, err := UserService.SearchUserByUsername(usernames, nil)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	attentionUsers := make([]response.AttentionUserData, len(*users))
+	for i := 0; i < len(*users); i++ {
+		attentionUsers[i].Username = (*users)[i].Username
+		attentionUsers[i].Nickname = (*users)[i].Nickname
+		attentionUsers[i].Profile = (*users)[i].Profile
+	}
+	response.BuildOkResponse(0, &attentionUsers, c)
 }

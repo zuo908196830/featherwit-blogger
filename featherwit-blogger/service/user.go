@@ -50,3 +50,29 @@ func (u *UserService) LoginStatus(user map[string]interface{}, s *xorm.Session) 
 	}
 	return true, nil
 }
+
+func (u *UserService) SearchAttentionUser(username string, limit int, offset int, s *xorm.Session) (*[]string, error) {
+	s = CommonServiceApp.SetSession(s)
+	attention := make([]*model.Attention, 0)
+	err := s.Cols("a_username").Where("username = ?", username).OrderBy("create_at").Limit(limit, offset).Find(&attention)
+	if err != nil {
+		log.Printf("select attention error:%v", err)
+		return nil, err
+	}
+	users := make([]string, len(attention))
+	for i := 0; i < len(attention); i++ {
+		users[i] = attention[i].AUsername
+	}
+	return &users, nil
+}
+
+func (u *UserService) SearchUserByUsername(usernames *[]string, s *xorm.Session) (*[]*model.User, error) {
+	s = CommonServiceApp.SetSession(s)
+	users := make([]*model.User, 0)
+	err := s.Cols("username", "nickname", "profile").In("username", *usernames).Find(&users)
+	if err != nil {
+		log.Printf("select user error: %v", err)
+		return nil, err
+	}
+	return &users, nil
+}

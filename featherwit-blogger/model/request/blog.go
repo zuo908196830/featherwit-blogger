@@ -6,7 +6,7 @@ type BlogRequest struct {
 	Profile string `json:"profile"`
 }
 
-type SearchBlogRequest struct {
+type Page struct {
 	Limit  int `json:"limit" uri:"limit"`
 	Offset int `json:"offset" uri:"offset"`
 }

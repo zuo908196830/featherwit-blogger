@@ -5,6 +5,7 @@ import (
 	"featherwit-blogger/global"
 	"log"
 
+	"github.com/gin-gonic/gin"
 	"xorm.io/xorm"
 )
 
@@ -78,4 +79,11 @@ func (cs *CommonService) SetSession(s *xorm.Session) *xorm.Session {
 		return global.DbEngine.NewSession()
 	}
 	return s
+}
+
+func (cs *CommonService) GetUsername(c *gin.Context) string {
+	val, _ := c.Get("User-Info")
+	tkmp := val.(map[string]interface{})
+	username := tkmp["username"].(string)
+	return username
 }

@@ -14,3 +14,9 @@ type UserData struct {
 	Mail      string `json:"mail" xorm:"varchar(45)"`
 	Profile   string `json:"profile" xorm:"varchar(400)"`
 }
+
+type AttentionUserData struct {
+	Username string `json:"username"`
+	Nickname string `json:"nickname"`
+	Profile  string `json:"profile"`
+}

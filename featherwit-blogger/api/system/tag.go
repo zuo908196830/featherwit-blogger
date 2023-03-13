@@ -73,9 +73,7 @@ func (t *TagApi) AddTagBlog(c *gin.Context) {
 
 func (t *TagApi) DeleteTagBlog(c *gin.Context) {
 	s := c.Param("blogId")
-	val, _ := c.Get("User-Info")
-	tkmp := val.(map[string]interface{})
-	username := tkmp["username"].(string)
+	username := CommonService.GetUsername(c)
 	blogId, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)

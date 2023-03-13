@@ -24,6 +24,10 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 	get, _ := c.Get("User-Info")
 	tkmp := get.(map[string]interface{})
 	username, ok := tkmp["username"].(string)
+	if !ok {
+		response.BuildErrorResponse(errors.NewError(errors.TokenWrong, "username is not exist"), c)
+		return
+	}
 	user, err := UserService.GetUserByUsername(username, nil)
 	if err != nil {
 		log.Printf("select user error: %v", err)
@@ -33,10 +37,6 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 	if user == nil {
 		log.Printf("username is not exist")
 		response.BuildErrorResponse(errors.NewError(errors.Unauthorized, nil), c)
-		return
-	}
-	if !ok {
-		response.BuildErrorResponse(errors.NewError(errors.TokenWrong, "username is not exist"), c)
 		return
 	}
 	blog := &model.Blog{
@@ -58,7 +58,7 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 }
 
 func (b *BlogApi) SearchBlog(c *gin.Context) {
-	var param request.SearchBlogRequest
+	var param request.Page
 	if err := c.ShouldBindUri(&param); err != nil {
 		log.Printf("bind uri error:%v", err)
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
@@ -100,9 +100,7 @@ func (b *BlogApi) UpdateBlog(c *gin.Context) {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	val, _ := c.Get("User-Info")
-	tkmp := val.(map[string]interface{})
-	username := tkmp["username"].(string)
+	username := CommonService.GetUsername(c)
 	exist, err := BlogService.BlogExist(param.ID, nil)
 	if err != nil {
 		log.Printf("get blog error: %v", err)
@@ -144,9 +142,7 @@ func (b *BlogApi) DeleteBlog(c *gin.Context) {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	val, _ := c.Get("User-Info")
-	tkmp := val.(map[string]interface{})
-	username := tkmp["username"].(string)
+	username := CommonService.GetUsername(c)
 	session := global.DbEngine.NewSession()
 	defer session.Close()
 	if err := session.Begin(); err != nil {

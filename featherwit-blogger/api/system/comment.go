@@ -22,11 +22,9 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
 		return
 	}
-	mp, _ := c.Get("User-Info")
-	tkmp := mp.(map[string]interface{})
-	username := tkmp["username"]
+	username := CommonService.GetUsername(c)
 	comment := &model.Comment{
-		Username: username.(string),
+		Username: username,
 		BlogId:   param.BlogId,
 		ParentId: param.ParentId,
 		ReplyId:  param.ReplyId,
@@ -112,9 +110,7 @@ func (ca *CommentApi) DeleteComment(c *gin.Context) {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	mp, _ := c.Get("User-Info")
-	tkmp := mp.(map[string]interface{})
-	username := tkmp["username"].(string)
+	username := CommonService.GetUsername(c)
 	comment, err := CommentService.GetCommentById(commentId, nil)
 	if err != nil {
 		response.BuildErrorResponse(err, c)
