@@ -14,3 +14,7 @@ type Register struct {
 	Telephone string `json:"telephone"`
 	Profile   string `json:"profile"`
 }
+
+type AddAttentionRequest struct {
+	AUsername string `json:"aUsername" uri:"aUsername"`
+}

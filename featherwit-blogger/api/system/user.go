@@ -1,6 +1,7 @@
 package system
 
 import (
+	"featherwit-blogger/global"
 	"featherwit-blogger/model"
 	"featherwit-blogger/model/errors"
 	"featherwit-blogger/model/request"
@@ -182,4 +183,34 @@ func (u *UserApi) AttentionUser(c *gin.Context) {
 		attentionUsers[i].Profile = (*users)[i].Profile
 	}
 	response.BuildOkResponse(0, &attentionUsers, c)
+}
+
+func (u *UserApi) AddAttentionUser(c *gin.Context) {
+	var param request.AddAttentionRequest
+	err := c.ShouldBindJSON(&param)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	session := global.DbEngine.NewSession()
+	defer session.Close()
+	err = session.Begin()
+	if err != nil {
+		log.Printf("session begin error:%v", err)
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	username := CommonService.GetUsername(c)
+	if err := UserService.FansUpdate(param.AUsername, 1, session); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	if err := UserService.AddAttentionUser(username, param.AUsername, session); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	if err := session.Commit(); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
 }

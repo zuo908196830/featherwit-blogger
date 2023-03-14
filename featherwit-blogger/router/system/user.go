@@ -20,5 +20,6 @@ func (u *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 		userRouter.GET("status", UserApi.LoginStatus)
 		userRouter.GET("token/login", middle_ware.LoginToken(), UserApi.TokenLogin)
 		userRouter.GET("attention/:limit/:offset", middle_ware.LoginToken(), UserApi.AttentionUser)
+		userRouter.POST("attention/add", middle_ware.LoginToken(), UserApi.AddAttentionUser)
 	}
 }

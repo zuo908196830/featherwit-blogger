@@ -35,11 +35,15 @@ func (b *BlogService) SearchBlog(limit int, offset int, s *xorm.Session) ([]*mod
 func (b *BlogService) GetBlogById(id int64, s *xorm.Session) (*model.Blog, error) {
 	s = CommonServiceApp.SetSession(s)
 	blog := &model.Blog{ID: id}
-	ok, err := s.Get(blog)
+	ok, err := s.ForUpdate().Get(blog)
 	if err != nil {
 		return nil, err
 	} else if !ok {
 		return nil, nil
+	}
+	_, err = s.Where("id = ?", id).Cols("views").Update(&model.Blog{Views: blog.Views + 1})
+	if err != nil {
+		return nil, err
 	}
 	return blog, nil
 }
@@ -75,7 +79,7 @@ func (b *BlogService) BlogCount(s *xorm.Session) (int64, error) {
 func (b *BlogService) UpdateCommentCount(blogId int64, num int, s *xorm.Session) (bool, error) {
 	s = CommonServiceApp.SetSession(s)
 	blog := &model.Blog{}
-	ok, err := s.Cols("comment_count").Where("id = ?", blogId).Get(blog)
+	ok, err := s.Cols("comment_count").Where("id = ?", blogId).ForUpdate().Get(blog)
 	if err != nil {
 		log.Printf("get blog error:%v", err)
 		return false, err

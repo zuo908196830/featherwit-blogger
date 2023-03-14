@@ -80,6 +80,12 @@ func (b *BlogApi) GetBlogById(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
 		return
 	}
+	session := global.DbEngine.NewSession()
+	defer session.Close()
+	if err := session.Begin(); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
 	blog, err := BlogService.GetBlogById(bid.ID, nil)
 	if err != nil {
 		log.Printf("select by id error: %v", err)
@@ -88,6 +94,10 @@ func (b *BlogApi) GetBlogById(c *gin.Context) {
 	} else if blog == nil {
 		log.Printf("blog is not exist")
 		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "blog is not exist"), c)
+		return
+	}
+	if err := session.Commit(); err != nil {
+		response.BuildErrorResponse(err, c)
 		return
 	}
 	response.BuildOkResponse(0, blog, c)

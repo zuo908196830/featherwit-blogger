@@ -12,6 +12,15 @@ type UserService struct{}
 
 var UserServiceApp = new(UserService)
 
+func (u *UserService) UserExist(username string, s *xorm.Session) (bool, error) {
+	s = CommonServiceApp.SetSession(s)
+	has, err := s.Where("username = ?", username).Exist(new(model.User))
+	if err != nil {
+		return false, err
+	}
+	return has, nil
+}
+
 func (u *UserService) GetUserByUsername(username string, s *xorm.Session) (*model.User, error) {
 	s = CommonServiceApp.SetSession(s)
 	user := new(model.User)
@@ -75,4 +84,37 @@ func (u *UserService) SearchUserByUsername(usernames *[]string, s *xorm.Session)
 		return nil, err
 	}
 	return &users, nil
+}
+
+func (u *UserService) AddAttentionUser(username string, aUsername string, s *xorm.Session) error {
+	s = CommonServiceApp.SetSession(s)
+	att := &model.Attention{
+		Username:  username,
+		AUsername: aUsername,
+	}
+	if exist, err := s.Exist(att); err != nil {
+		return err
+	} else if exist {
+		return errors.NewError(errors.ResourceAlreadyExist, nil)
+	}
+	if _, err := s.Insert(att); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *UserService) FansUpdate(username string, num int, s *xorm.Session) error {
+	s = CommonServiceApp.SetSession(s)
+	var user model.User
+	if has, err := s.Cols("fans_count").Where("username = ?", username).ForUpdate().Get(&user); err != nil {
+		return err
+	} else if !has {
+		return errors.NewError(errors.ResourceNotExist, "aUsername not exist")
+	}
+	if _, err := s.Cols("fans_count").Where("username = ?", username).Update(&model.User{
+		FansCount: user.FansCount + int64(num),
+	}); err != nil {
+		return err
+	}
+	return nil
 }

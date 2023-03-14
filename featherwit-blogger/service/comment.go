@@ -24,7 +24,7 @@ func (cs *CommentService) AddComment(comment *model.Comment, s *xorm.Session) er
 func (cs *CommentService) UpdateCommentCount(id int64, num int, s *xorm.Session) (bool, error) {
 	s = CommonServiceApp.SetSession(s)
 	comment := &model.Comment{}
-	ok, err := s.Cols("comment_count").Where("id = ?", id).Get(comment)
+	ok, err := s.Cols("comment_count").Where("id = ?", id).ForUpdate().Get(comment)
 	if err != nil {
 		log.Printf("get comment error:%v", err)
 		return false, err
