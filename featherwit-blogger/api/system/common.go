@@ -24,8 +24,8 @@ func (ca *CommonApi) Upload(c *gin.Context) {
 
 	// todo 初始化client放到global中，考虑使用配置文件
 	Endpoint := "https://oss-cn-shenzhen.aliyuncs.com"
-	AccessKeyId := "LTAI5tDmtwUMCLNPcEUypsDt"
-	AccessKeySecret := "qrYDEYnIjUxxnifHKmts7TVt2NRb6P"
+	AccessKeyId := "myAccessKeyId"
+	AccessKeySecret := "myAccessKeySecret"
 	client, err := oss.New(Endpoint, AccessKeyId, AccessKeySecret)
 	if err != nil {
 		response.BuildErrorResponse(err, c)
