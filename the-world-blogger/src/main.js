@@ -6,10 +6,13 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/global.css'
 import config from '../config/config'
 import axios from 'axios'
+import 'mavon-editor/dist/css/index.css'
+import mavonEditor from 'mavon-editor'
 
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);
+Vue.use(mavonEditor);
 
 new Vue({
   router,

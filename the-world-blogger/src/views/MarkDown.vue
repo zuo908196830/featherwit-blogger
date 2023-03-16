@@ -10,7 +10,7 @@
             </el-input>
         </div>
         <div style="margin: 10px 0;"></div>
-        <mavon-editor v-model="content" ref="md" @change="change" style="min-height: 600px" />
+        <mavon-editor v-model="content" ref="md" @change="change" @imgAdd="$imgAdd" @imgDel="$imgDel" style="min-height: 600px" />
         <button @click="submit">提交</button>
     </div>
 </template>
@@ -31,6 +31,7 @@ export default {
             html: '',    // 及时转的html
             title: '',
             profile: '',
+            img_file: {},
         }
     },
     methods: {
@@ -64,6 +65,24 @@ export default {
                 }
             }).catch(() => {
             })
+        },
+        $imgAdd(pos, $file) {
+            var formdata = new FormData()
+            formdata.append('image', $file)
+            axios({
+               url: '/api/common/upload',
+               method: 'post',
+               data: formdata,
+               headers: { 'Content-Type': 'multipart/form-data' },
+           }).then(res => {
+               // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+               /**
+               * $vm 指为mavonEditor实例，可以通过如下两种方式获取
+               * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
+               * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
+               */
+               this.$refs.md.$img2Url(pos, res.data.data);
+           })
         }
     },
     mounted() {

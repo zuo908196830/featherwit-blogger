@@ -7,6 +7,7 @@ type ApiGroup struct {
 	BlogApi
 	CommentApi
 	TagApi
+	CommonApi
 }
 
 var (

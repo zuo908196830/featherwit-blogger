@@ -5,4 +5,5 @@ type SystemRouter struct {
 	BlogRouter
 	CommentRouter
 	TagRouter
+	CommonRouter
 }
