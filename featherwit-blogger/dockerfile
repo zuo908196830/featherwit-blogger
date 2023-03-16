@@ -1,0 +1,9 @@
+FROM centos
+ENV MYPATH /usr/local
+WORKDIR $MYPATH
+RUN mkdir /usr/local/blogger
+RUN mkdir /usr/local/blogger/conf
+ADD featherwit-blogger /usr/local/blogger
+RUN chmod 777 /usr/local/blogger/featherwit-blogger
+EXPOSE 8080
+CMD [ "/usr/local/blogger/featherwit-blogger" ]
