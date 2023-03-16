@@ -1,0 +1,22 @@
+{
+    "mysql": {
+        "ip": "127.0.0.1",
+        "port": 3306,
+        "username": "root",
+        "password": "zuo123456789ke",
+        "database": "the_fool_blogger"
+    },
+    "redis": {
+        "ip": "121.89.220.131",
+        "port": 6379,
+        "password": "zuo123456789ke",
+        "database": 0,
+        "maxIdle": 16,
+        "maxActive": 0,
+        "idleTimeout": 300
+    },
+    "AccessKey": {
+        "accessKeyId": "",
+        "accessKeySecret": ""
+    }
+}
