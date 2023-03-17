@@ -73,11 +73,12 @@ func AdministratorsToken() gin.HandlerFunc {
 		get, _ := c.Get("User-Info")
 		tkmp := get.(map[string]interface{})
 		role, err := service.CommonServiceApp.RedisGet(tkmp["username"].(string))
+		r := string(role.([]byte))
 		if err != nil {
 			response.BuildErrorResponse(err, c)
 			c.Abort()
 			return
-		} else if role != 1 {
+		} else if r != "1" {
 			response.BuildErrorResponse(errors.NewError(errors.Unauthorized, nil), c)
 			c.Abort()
 			return
