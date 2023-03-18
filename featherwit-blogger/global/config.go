@@ -27,4 +27,6 @@ type RedisConfig struct {
 type AccessKeyConfig struct {
 	AccessKeyId     string `json:"accessKeyId"`
 	AccessKeySecret string `json:"accessKeySecret"`
+	Endpoint        string `json:"Endpoint"`
+	ImgBucket       string `json:"imgBucket"`
 }

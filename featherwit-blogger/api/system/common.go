@@ -23,8 +23,7 @@ func (ca *CommonApi) Upload(c *gin.Context) {
 		return
 	}
 
-	// todo 初始化client放到global中，考虑使用配置文件
-	Endpoint := "https://oss-cn-shenzhen.aliyuncs.com"
+	Endpoint := global.GlobalConfig.AccessKey.Endpoint
 	AccessKeyId := global.GlobalConfig.AccessKey.AccessKeyId
 	AccessKeySecret := global.GlobalConfig.AccessKey.AccessKeySecret
 	client, err := oss.New(Endpoint, AccessKeyId, AccessKeySecret)
@@ -32,19 +31,19 @@ func (ca *CommonApi) Upload(c *gin.Context) {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	bucket, err := client.Bucket("featherwit-blog-img")
+	bucket, err := client.Bucket(global.GlobalConfig.AccessKey.ImgBucket)
 	if err != nil {
 		response.BuildErrorResponse(err, c)
 		return
 	}
 
 	// todo 识别文件后缀，生成一个随机、唯一的文件名，添加上原后缀
-	err = bucket.PutObject("img/test2.png", img)
+	err = bucket.PutObject("img/test6.png", img)
 	if err != nil {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	imgUrl, err := bucket.SignURL("img/test2.png", oss.HTTPGet, 3600)
+	imgUrl, err := bucket.SignURL("img/test6.png", oss.HTTPGet, 3600)
 	if err != nil {
 		response.BuildErrorResponse(err, c)
 		return
