@@ -16,8 +16,8 @@
         "idleTimeout": 300
     },
     "AccessKey": {
-        "accessKeyId": "LTAI5tJGFLZFFvDHQUAiyxGi",
-        "accessKeySecret": "rmnYhUeaC9R1IgAvEnrbJ43gd9L9Pv",
+        "accessKeyId": "",
+        "accessKeySecret": "",
         "endpoint": "https://oss-cn-shenzhen.aliyuncs.com",
         "imgBucket": "featherwit-blog-img"
     }
