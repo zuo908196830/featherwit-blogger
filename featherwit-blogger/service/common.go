@@ -1,10 +1,15 @@
 package service
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"featherwit-blogger/global"
+	"fmt"
 	"log"
+	"mime/multipart"
+	"strings"
 
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
 	"xorm.io/xorm"
 )
@@ -86,4 +91,56 @@ func (cs *CommonService) GetUsername(c *gin.Context) string {
 	tkmp := val.(map[string]interface{})
 	username := tkmp["username"].(string)
 	return username
+}
+
+func (cs *CommonService) GetFileName() (string, error) {
+	b := make([]byte, 8)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", err
+	}
+	s := fmt.Sprintf("%x", b)
+	return s, err
+}
+
+func (cs *CommonService) UploadImg(img *multipart.File, headers *multipart.FileHeader) (string, error) {
+	Endpoint := global.GlobalConfig.AccessKey.Endpoint
+	AccessKeyId := global.GlobalConfig.AccessKey.AccessKeyId
+	AccessKeySecret := global.GlobalConfig.AccessKey.AccessKeySecret
+	client, err := oss.New(Endpoint, AccessKeyId, AccessKeySecret)
+	if err != nil {
+		log.Printf("get oss client error :%v", err)
+		return "", err
+	}
+	bucket, err := client.Bucket(global.GlobalConfig.AccessKey.ImgBucket)
+	if err != nil {
+		log.Printf("get oss bucket error :%v", err)
+		return "", err
+	}
+
+	// todo 识别文件后缀，生成一个随机、唯一的文件名，添加上原后缀
+	imgName := ""
+	ok := true
+	for ok {
+		parts := strings.Split(headers.Filename, ".")
+		last := parts[len(parts)-1]
+		s, _ := cs.GetFileName()
+		imgName = "img/" + s + "." + last
+		ok, err = bucket.IsObjectExist(imgName)
+		if err != nil {
+			log.Printf("search oss img error :%v", err)
+			return "", err
+		}
+	}
+	err = bucket.PutObject(imgName, *img)
+	if err != nil {
+		log.Printf("save oss img error :%v", err)
+		return "", err
+	}
+	imgUrl, err := bucket.SignURL(imgName, oss.HTTPGet, 3600)
+	if err != nil {
+		log.Printf("get img url error :%v", err)
+		return "", err
+	}
+	return imgUrl, nil
 }

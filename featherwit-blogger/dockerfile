@@ -4,7 +4,6 @@ RUN mkdir /usr/local/blogger
 RUN mkdir /usr/local/blogger/conf
 ADD featherwit-blogger /usr/local/blogger
 COPY conf/config.json /usr/local/blogger/conf
-RUN cd /usr/local/blogger
 RUN chmod 777 /usr/local/blogger/featherwit-blogger
 WORKDIR $MYPATH
 EXPOSE 8080
