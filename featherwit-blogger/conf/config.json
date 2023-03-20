@@ -3,13 +3,13 @@
         "ip": "127.0.0.1",
         "port": 3306,
         "username": "root",
-        "password": "zuo123456789ke",
-        "database": "the_fool_blogger"
+        "password": "",
+        "database": ""
     },
     "redis": {
-        "ip": "121.89.220.131",
+        "ip": "127.0.0.1",
         "port": 6379,
-        "password": "zuo123456789ke",
+        "password": "",
         "database": 0,
         "maxIdle": 16,
         "maxActive": 0,
@@ -18,7 +18,7 @@
     "AccessKey": {
         "accessKeyId": "",
         "accessKeySecret": "",
-        "endpoint": "https://oss-cn-shenzhen.aliyuncs.com",
-        "imgBucket": "featherwit-blog-img"
+        "endpoint": "https://oss-cn-***.aliyuncs.com",
+        "imgBucket": ""
     }
 }
