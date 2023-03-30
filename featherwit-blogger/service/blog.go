@@ -24,7 +24,7 @@ func (b *BlogService) AddBlog(blog *model.Blog, s *xorm.Session) error {
 func (b *BlogService) SearchBlog(limit int, offset int, s *xorm.Session) ([]*model.Blog, error) {
 	s = CommonServiceApp.SetSession(s)
 	blogs := make([]*model.Blog, 0)
-	err := s.Cols("id", "username", "create_at", "update_at", "title", "views", "comment_count", "like_count").Limit(limit, offset).Find(&blogs)
+	err := s.Cols("id", "username", "create_at", "update_at", "title", "views", "comment_count", "like_count", "profile", "cover").Limit(limit, offset).Find(&blogs)
 	if err != nil {
 		log.Printf("search blog error: %v", err)
 		return nil, err

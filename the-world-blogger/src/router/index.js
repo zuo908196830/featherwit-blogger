@@ -5,6 +5,7 @@ import LoginView from '../views/LoginView.vue'
 import UserData from '../views/UserDataView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import MarkDown from '../views/MarkDown.vue'
+import BlogView from '../views/BlogView.vue'
 
 Vue.use(VueRouter)
 
@@ -35,6 +36,10 @@ const routes = [
   {
     path: '/blog/content',
     component: MarkDown
+  },
+  {
+    path: '/blog',
+    component: BlogView
   }
 ]
 

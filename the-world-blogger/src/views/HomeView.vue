@@ -5,15 +5,22 @@
                 <li v-for="(blog, index) of blogs" :key="index" style="list-style-type: none;">
                     <div class="blogs">
                         <div class="blogsLink">
-                            <el-link style="font-size:large; font-weight:bolder;">{{
-                                blog.title
-                            }}</el-link>
+                            <el-link style="font-size:large; font-weight:bolder;"
+                                @click="getBlogById(blog)">{{
+                                    blog.title
+                                }}</el-link>
                         </div>
-                        <div class="blogsCover">
+                        <div class="blogsCover" v-if="blog.cover">
                             <!-- 封面 -->
+                            <el-image style="width: 150px;height: 125px" :src="blog.cover" :fit="fill "></el-image>
                         </div>
-                        <div class="blogsProfile">
+                        <div class="blogsProfile" v-if="blog.cover">
                             <!-- 简介 -->
+                            <div>{{ blog.profile }}</div>
+                        </div>
+                        <div v-if="!blog.cover">
+                            <!-- 简介 -->
+                            <div>{{ blog.profile }}</div>
                         </div>
                     </div>
                 </li>
@@ -62,8 +69,14 @@ export default {
                     this.blogs = res.data.data
                 }
             }).catch(() => {
-
+                this.$message({
+                    message: '服务器错误',
+                    type: 'error'
+                })
             })
+        },
+        getBlogById() {
+            this.$router.push("/blog?id=10")
         }
     },
     created() {
@@ -76,7 +89,17 @@ export default {
 <style>
 .blogs {
     height: 150px;
-    border:1px solid #dedede;
-    border-collapse:collapse;
+    border: 1px solid #dedede;
+    border-collapse: collapse;
+}
+
+.blogsProfile {
+    position: absolute;
+    left: 210px;
+}
+
+.blogsCover {
+    position: absolute;
+    left: 50px;
 }
 </style>
