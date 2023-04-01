@@ -201,3 +201,43 @@ func (b *BlogApi) DeleteBlog(c *gin.Context) {
 	session.Commit()
 	response.BuildOkResponse(0, nil, c)
 }
+
+func (b *BlogApi) UpdateCover(c *gin.Context) {
+	img, headers, err := c.Request.FormFile("image")
+	if err != nil {
+		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
+		return
+	}
+	//headers.Size 获取文件大小
+	if headers.Size > 1024*1024*16 {
+		response.BuildErrorResponse(errors.NewError(errors.BadRequest, "file to big"), c)
+		return
+	}
+	url, err := CommonService.UploadImg(&img, headers)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+	}
+	s := c.Param("blogId")
+	blogId, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
+		return
+	}
+	username := CommonService.GetUsername(c)
+	blog, err := BlogService.GetBlogById(blogId, nil)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	if blog.Username != username {
+		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, nil), c)
+		return
+	}
+	blog.Cover = url
+	err = BlogService.UpdateBlog(blog, nil)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	response.BuildOkResponse(0, nil, c)
+}

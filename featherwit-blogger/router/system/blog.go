@@ -19,5 +19,6 @@ func (b *BlogRouter) InitBlogRouter(Router *gin.RouterGroup) {
 		blogRouter.PUT("update/:id", middle_ware.AddBlog(), blogApi.UpdateBlog)
 		blogRouter.GET("count", blogApi.GetBlogCount)
 		blogRouter.DELETE("delete/:blogId", middle_ware.LoginToken(), blogApi.DeleteBlog)
+		blogRouter.POST("cover/:blogId", middle_ware.LoginToken(), blogApi.UpdateCover)
 	}
 }
