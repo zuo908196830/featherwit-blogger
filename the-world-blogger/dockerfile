@@ -1,8 +1,11 @@
 FROM node:18.12.1
 ENV WORK /usr/local/world
 RUN mkdir /usr/local/world
-ADD dist /usr/local/world
+RUN mkdir /usr/local/world/dist
+RUN mkdir /usr/local/world/node_modules
+ADD dist /usr/local/world/dist
+ADD node_modules /usr/local/world/node_modules
 ADD start.js /usr/local/world
 WORKDIR $WORK
 EXPOSE 80
-CMD [ "start.js", "node" ]
+CMD ["node", "start.js"]
