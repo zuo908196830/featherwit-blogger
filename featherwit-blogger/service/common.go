@@ -104,7 +104,7 @@ func (cs *CommonService) GetFileName() (string, error) {
 }
 
 func (cs *CommonService) UploadImg(img *multipart.File, headers *multipart.FileHeader) (string, error) {
-	Endpoint := global.GlobalConfig.AccessKey.Endpoint
+	Endpoint := "https://" + global.GlobalConfig.AccessKey.Endpoint
 	AccessKeyId := global.GlobalConfig.AccessKey.AccessKeyId
 	AccessKeySecret := global.GlobalConfig.AccessKey.AccessKeySecret
 	client, err := oss.New(Endpoint, AccessKeyId, AccessKeySecret)
@@ -137,10 +137,6 @@ func (cs *CommonService) UploadImg(img *multipart.File, headers *multipart.FileH
 		log.Printf("save oss img error :%v", err)
 		return "", err
 	}
-	imgUrl, err := bucket.SignURL(imgName, oss.HTTPGet, 3600)
-	if err != nil {
-		log.Printf("get img url error :%v", err)
-		return "", err
-	}
+	imgUrl := "https://" + global.GlobalConfig.AccessKey.ImgBucket + "." + global.GlobalConfig.AccessKey.Endpoint + "/" + imgName
 	return imgUrl, nil
 }
