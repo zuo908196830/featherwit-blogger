@@ -75,8 +75,8 @@ export default {
                 })
             })
         },
-        getBlogById() {
-            this.$router.push("/blog?id=10")
+        getBlogById(blog) {
+            this.$router.push("/blog?id=" + blog.id)
         }
     },
     created() {

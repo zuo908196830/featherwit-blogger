@@ -1,16 +1,22 @@
 <template>
     <div>
-        <div>blog</div>
         <div>
-            {{ id }}
+            <h2 style="text-align: center;">{{ blog.title }}</h2>
+        </div>
+        <div>
+            <VueMarkDown :source="blog.content"/>
         </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import VueMarkDown from 'vue-markdown'
 
 export default {
+    components: {
+        VueMarkDown
+    },
     data() {
         return {
             id: 0,
@@ -38,6 +44,7 @@ export default {
     },
     mounted() {
         this.id = this.$route.query.id
+        this.getBlog()
     }
 }
 </script>
