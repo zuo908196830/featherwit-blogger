@@ -132,7 +132,7 @@ export default {
       this.username = ""
       this.loginStatus = false
     }
-  }
+  },
 }
 </script>
 
@@ -151,5 +151,9 @@ export default {
 .block {
   width: 60%;
   height: 70%;
+}
+
+img {
+  max-width: 86%;
 }
 </style>

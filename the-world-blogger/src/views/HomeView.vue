@@ -49,6 +49,7 @@ export default {
     },
     methods: {
         changePage() {
+            localStorage.setItem("page", this.page)
             this.getBlogs()
         },
         getTotal() {
@@ -80,6 +81,10 @@ export default {
         }
     },
     created() {
+        var p = localStorage.getItem('page')
+        if (p) {
+            this.page = p
+        }
         this.getTotal()
         this.getBlogs()
     },

@@ -1,10 +1,12 @@
 <template>
     <div>
-        <div>
-            <h2 style="text-align: center;">{{ blog.title }}</h2>
-        </div>
-        <div>
-            <VueMarkDown :source="blog.content"/>
+        <div style="position:absolute; left:7%; weight:86%">
+            <div>
+                <h2 style="text-align: center;">{{ blog.title }}</h2>
+            </div>
+            <div>
+                <VueMarkDown :source="blog.content" />
+            </div>
         </div>
     </div>
 </template>
