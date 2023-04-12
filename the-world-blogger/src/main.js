@@ -8,9 +8,10 @@ import config from '../config/config'
 import axios from 'axios'
 import 'mavon-editor/dist/css/index.css'
 import mavonEditor from 'mavon-editor'
+import globalVal from './global/globalVal.vue'
 
 Vue.config.productionTip = false
-
+Vue.prototype.GLOBAL = globalVal
 Vue.use(ElementUI);
 Vue.use(mavonEditor);
 
