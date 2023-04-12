@@ -1,13 +1,13 @@
 {
     "mysql": {
-        "ip": "127.0.0.1",
+        "ip": "",
         "port": 3306,
         "username": "root",
         "password": "",
         "database": ""
     },
     "redis": {
-        "ip": "127.0.0.1",
+        "ip": "",
         "port": 6379,
         "password": "",
         "database": 0,
@@ -18,7 +18,13 @@
     "AccessKey": {
         "accessKeyId": "",
         "accessKeySecret": "",
-        "endpoint": "https://oss-cn-***.aliyuncs.com",
+        "endpoint": "",
         "imgBucket": ""
+    },
+    "elasticsearch": {
+        "host": "",
+        "port": 0,
+        "user": "",
+        "password": ""
     }
 }
