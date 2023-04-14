@@ -58,13 +58,19 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 }
 
 func (b *BlogApi) SearchBlog(c *gin.Context) {
-	var param request.Page
-	if err := c.ShouldBindUri(&param); err != nil {
+	var page request.Page
+	var param request.SearchBlogRequest
+	if err := c.ShouldBindUri(&page); err != nil {
 		log.Printf("bind uri error:%v", err)
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
 		return
 	}
-	blogs, err := BlogService.SearchBlog(param.Limit, param.Offset, nil)
+	if err := c.ShouldBindJSON(&param); err != nil {
+		log.Printf("bind JSON error:%v", err)
+		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
+		return
+	}
+	blogs, err := BlogService.SearchBlog(&param, page.Limit, page.Offset, nil)
 	if err != nil {
 		log.Printf("search blog error:%v", err)
 		response.BuildErrorResponse(err, c)

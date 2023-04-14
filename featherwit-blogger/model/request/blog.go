@@ -20,3 +20,10 @@ type UpdateBlogRequest struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
 }
+
+type SearchBlogRequest struct {
+	ID1  string `json:"id1"`
+	ID2  string `json:"id2"`
+	ID3  string `json:"id3"`
+	Name string `json:"name"`
+}

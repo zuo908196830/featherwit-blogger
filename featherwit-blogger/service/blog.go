@@ -2,6 +2,7 @@ package service
 
 import (
 	"featherwit-blogger/model"
+	"featherwit-blogger/model/request"
 	"log"
 
 	"xorm.io/xorm"
@@ -21,10 +22,24 @@ func (b *BlogService) AddBlog(blog *model.Blog, s *xorm.Session) error {
 	return nil
 }
 
-func (b *BlogService) SearchBlog(limit int, offset int, s *xorm.Session) ([]*model.Blog, error) {
+func (b *BlogService) SearchBlog(param *request.SearchBlogRequest, limit int, offset int, s *xorm.Session) ([]*model.Blog, error) {
 	s = CommonServiceApp.SetSession(s)
 	blogs := make([]*model.Blog, 0)
-	err := s.Cols("id", "username", "create_at", "update_at", "title", "views", "comment_count", "like_count", "profile", "cover").Limit(limit, offset).Find(&blogs)
+	s = s.Table("blog").Alias("b")
+	s = s.Cols("id", "username", "b.create_at as create_at", "b.update_at as update_at", "title", "views", "comment_count", "like_count", "profile", "cover").Limit(limit, offset).Where("1=1")
+	if param.Name != "" {
+		s = s.And("title like ?", "%"+param.Name+"%").Or("profile like ?", "%"+param.Name+"%")
+	}
+	if param.ID1 != "" {
+		s = s.Join("INNER", "tag_blog", "id = blog_id").And("tag_id1 = ?", param.ID1)
+	}
+	if param.ID2 != "" {
+		s = s.And("tag_id2 = ?", param.ID2)
+	}
+	if param.ID3 != "" {
+		s = s.And("tag_id3 = ?", param.ID3)
+	}
+	err := s.Find(&blogs)
 	if err != nil {
 		log.Printf("search blog error: %v", err)
 		return nil, err

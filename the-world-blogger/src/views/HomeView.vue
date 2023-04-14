@@ -44,7 +44,8 @@ export default {
             page: 1,
             limit: 10,
             total: 90,
-            loading: false
+            loading: false,
+            searchMsg: {}
         }
     },
     methods: {
@@ -65,7 +66,7 @@ export default {
             })
         },
         getBlogs() {
-            axios.get('/api/blog/' + this.limit + '/' + (this.limit) * (this.page - 1)).then(res => {
+            axios.post('/api/blog/' + this.limit + '/' + (this.limit) * (this.page - 1), this.searchMsg).then(res => {
                 if (res.data.code === 0) {
                     this.blogs = res.data.data
                 }
