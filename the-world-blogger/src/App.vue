@@ -1,50 +1,66 @@
 <template>
   <div id="app">
-    <el-header style="height:40px">
-      <div>
-        <el-input v-model="searchName" placeholder="搜索文章"
-          style="position: absolute; left: 25%; width: 40%"></el-input>
-        <el-button type="primary" icon="el-icon-search" @click=search
-          style="position: absolute; left: 65.1%;">搜索</el-button>
-      </div>
-      <div style="position: absolute; top: 1px; right: 1px;">
-        <nav>
-          <router-link to="/login" v-if="!loginStatus" class="user_show">登录/注册</router-link>
+    <el-header class="header">
+      <div class="container">
+        <div class="logo">
+          <div>愚者</div>
+          <div>世界</div>
+        </div>
+        <div class="left">
+          <div class="dh">
+            <span>
+              <a href="/" class="router-link">首页</a>
+            </span>
+            <span>
+              <a href="/search" class="router-link">搜索</a>
+            </span>
+          </div>
+        </div>
+<!--        <el-input v-model="searchName" placeholder="搜索"-->
+<!--          style="position: absolute; left: 25%; width: 40%"></el-input>-->
+<!--        <el-button type="primary" icon="el-icon-search" @click=search-->
+<!--          style="position: absolute; left: 65.1%;">搜索</el-button>-->
+        <div class="right">
+          <div style="position: absolute; top: 1px; right: 1px;">
+            <nav>
+              <router-link to="/login" v-if="!loginStatus" class="user_show">登录/注册</router-link>
 
-          <!-- 登录后的用户展示界面 -->
-          <el-button v-if="loginStatus" @click="drawer = true" type="primary" style="margin-left: 16px;"
-            class="user_show">
-            {{ username }}
-          </el-button>
+              <!-- 登录后的用户展示界面 -->
+              <el-button v-if="loginStatus" @click="drawer = true" type="primary" style="margin-left: 16px;"
+                         class="user_show">
+                {{ username }}
+              </el-button>
 
-          <el-drawer title="我是标题" :visible.sync="drawer" :with-header="false">
-            <div class="head_photo">
-              <div class="block">
-                <span class="demonstration"></span>
-                <el-image>
-                  <div slot="error" class="image-slot">
-                    <i class="el-icon-picture-outline"></i>
+              <el-drawer title="我是标题" :visible.sync="drawer" :with-header="false">
+                <div class="head_photo">
+                  <div class="block">
+                    <span class="demonstration"></span>
+                    <el-image>
+                      <div slot="error" class="image-slot">
+                        <i class="el-icon-picture-outline"></i>
+                      </div>
+                    </el-image>
                   </div>
-                </el-image>
-              </div>
-            </div>
-            <div>
-              <router-link to="/user/data">
-                <el-button style="width:100%; height:40px">个人详情</el-button>
-              </router-link>
-            </div>
-            <div>
-              <el-button style="width:100%; height:40px">收藏夹</el-button>
-            </div>
-            <div>
-              <el-button style="width:100%; height:40px">历史记录</el-button>
-            </div>
-            <div>
-              <el-button @click="logout" style="width:100%; height:40px">退出</el-button>
-            </div>
-          </el-drawer>
+                </div>
+                <div>
+                  <router-link to="/user/data">
+                    <el-button style="width:100%; height:40px">个人详情</el-button>
+                  </router-link>
+                </div>
+                <div>
+                  <el-button style="width:100%; height:40px">收藏夹</el-button>
+                </div>
+                <div>
+                  <el-button style="width:100%; height:40px">历史记录</el-button>
+                </div>
+                <div>
+                  <el-button @click="logout" style="width:100%; height:40px">退出</el-button>
+                </div>
+              </el-drawer>
 
-        </nav>
+            </nav>
+          </div>
+        </div>
       </div>
     </el-header>
     <router-view />
@@ -166,5 +182,29 @@ export default {
 
 img {
   max-width: 86%;
+}
+
+.header {
+  height:60px;
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  position: absolute;
+  left: 10%;
+  color: black;
+  div:first-child{
+    font-size: 18px;
+  }
+}
+
+.left {
+  margin-right: 20px;
+}
+
+.router-link {
+  color: #2b3539;
 }
 </style>

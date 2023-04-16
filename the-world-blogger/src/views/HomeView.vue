@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <div>
             <ul>
                 <li v-for="(blog, index) of blogs" :key="index" style="list-style-type: none;">
@@ -97,6 +97,7 @@ export default {
     height: 150px;
     border: 1px solid #dedede;
     border-collapse: collapse;
+    width: 99.8%;
 }
 
 .blogsProfile {
@@ -107,5 +108,9 @@ export default {
 .blogsCover {
     position: absolute;
     left: 50px;
+}
+
+.container {
+    background-color: #f0eeee;
 }
 </style>
