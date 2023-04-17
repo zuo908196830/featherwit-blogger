@@ -1,116 +1,137 @@
 <template>
-    <div class="container">
-        <div>
-            <ul>
-                <li v-for="(blog, index) of blogs" :key="index" style="list-style-type: none;">
-                    <div class="blogs">
-                        <div class="blogsLink">
-                            <el-link style="font-size:large; font-weight:bolder;"
-                                @click="getBlogById(blog)">{{
-                                    blog.title
-                                }}</el-link>
-                        </div>
-                        <div class="blogsCover" v-if="blog.cover">
-                            <!-- 封面 -->
-                            <el-image style="width: 150px;height: 125px" :src="blog.cover" :fit="fill "></el-image>
-                        </div>
-                        <div class="blogsProfile" v-if="blog.cover">
-                            <!-- 简介 -->
-                            <div>{{ blog.profile }}</div>
-                        </div>
-                        <div v-if="!blog.cover">
-                            <!-- 简介 -->
-                            <div>{{ blog.profile }}</div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div style="position: absolute; left: 35%;">
-            <el-pagination layout="prev, pager, next" :total="total" :page-size="limit" :current-page.sync="page"
-                @current-change="changePage">
-            </el-pagination>
-        </div>
+  <div class="index_view">
+    <gvb-nav/>
+<!--    <div class="gvb_banner">-->
+<!--      <img src="https://featherwit-blog-img.oss-cn-shenzhen.aliyuncs.com/img/7c7dfa29baf2bd0f.jpg"/>-->
+<!--    </div>-->
+    <div class="gvb_base_container">
+      <div class="gvb_inner_container">
+
+      </div>
     </div>
+    <div class="gvb_footer"></div>
+  </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
+import config from '../../config/config'
+import gvbNav from './components/gvbNav'
+// import gvbBanner from "@/views/components/gvbBanner";
 
 export default {
-    data() {
-        return {
-            blogs: [],
-            page: 1,
-            limit: 10,
-            total: 90,
-            loading: false,
-            searchMsg: {}
+  components: {
+    gvbNav,
+    // gvbBanner
+  },
+  data() {
+    return {
+      drawer: false,
+      username: localStorage.getItem("user"),
+      loginStatus: localStorage.getItem("loginStatus"),
+      searchName: ""
+    }
+  },
+  methods: {
+    logout() {
+      axios.get("/api/user/logout").then(res => {
+        if (res.data.code === 0) {
+          localStorage.removeItem("user")
+          axios.defaults.headers.common['Authorization'] = ""
+          this.username = ""
+          this.loginStatus = false
+          this.drawer = false
+          localStorage.setItem("loginStatus", false)
+          if (this.$route.path === "/user/data") {
+            this.$router.push('/')
+          }
         }
+      })
     },
-    methods: {
-        changePage() {
-            localStorage.setItem("page", this.page)
-            this.getBlogs()
-        },
-        getTotal() {
-            axios.get('/api/blog/count').then(res => {
-                if (res.data.code === 0) {
-                    this.total = res.data.data.total
-                }
-            }).catch(() => {
-                this.$message({
-                    message: '服务器错误',
-                    type: 'error'
-                })
-            })
-        },
-        getBlogs() {
-            axios.post('/api/blog/' + this.limit + '/' + (this.limit) * (this.page - 1), this.searchMsg).then(res => {
-                if (res.data.code === 0) {
-                    this.blogs = res.data.data
-                }
-            }).catch(() => {
-                this.$message({
-                    message: '服务器错误',
-                    type: 'error'
-                })
-            })
-        },
-        getBlogById(blog) {
-            this.$router.push("/blog?id=" + blog.id)
+  },
+  created() {
+    axios.defaults.baseURL = config.host
+    if (localStorage.getItem("token")) {
+      axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
+      axios.get("/api/user/token/login").then(res => {
+        if (res.data.code === 0) {
+          if (res.data.data.nickname) {
+            this.username = res.data.data.nickname
+            localStorage.setItem("user", res.data.data.nickname)
+          } else {
+            this.username = res.data.data.username
+            localStorage.setItem("user", res.data.data.username)
+          }
+          this.loginStatus = true
+          localStorage.setItem("loginStatus", true)
+        } else {
+          localStorage.setItem("loginStatus", false)
+          localStorage.removeItem("user")
+          this.loginStatus = false
+          this.username = false
+          axios.defaults.headers.common['Authorization'] = ""
         }
-    },
-    created() {
-        var p = localStorage.getItem('page')
-        if (p) {
-            this.page = p
-        }
-        this.getTotal()
-        this.getBlogs()
-    },
+
+      }).catch(() => {
+        localStorage.setItem("loginStatus", false)
+        localStorage.removeItem("user")
+        this.loginStatus = false
+        this.username = false
+        axios.defaults.headers.common['Authorization'] = ""
+      })
+      // this.loginStatus()
+    } else {
+      localStorage.setItem("loginStatus", false)
+      localStorage.removeItem("user")
+      axios.defaults.headers.common['Authorization'] = ""
+      this.username = ""
+      this.loginStatus = false
+    }
+    this.loginStatus = localStorage.getItem('loginStatus')
+  },
 }
 </script>
 
-<style>
-.blogs {
-    height: 150px;
-    border: 1px solid #dedede;
-    border-collapse: collapse;
-    width: 99.8%;
+<style lang="scss">
+a {
+  text-decoration: none;
 }
 
-.blogsProfile {
-    position: absolute;
-    left: 210px;
+
+.index_view {
+  background-color: #f0eeee;
+
+  .gvb_base_container {
+    width: 1200px;
+    display: flex;
+    justify-content: center;
+    .gvb_inner_container {
+      background-color: white;
+      min-height: 1000px;
+      margin-top: 20px;
+    }
+  }
+
+  .gvb_banner{
+    height: 600px;
+    width: 100%;
+    background-color: darksalmon;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
 }
 
-.blogsCover {
-    position: absolute;
-    left: 50px;
-}
+.user_show {
+  cursor: pointer;
 
-.container {
-    background-color: #f0eeee;
+  &:hover {
+    color: cornflowerblue;
+  }
 }
 </style>
