@@ -70,6 +70,9 @@ func (b *BlogApi) SearchBlog(c *gin.Context) {
 		response.BuildErrorResponse(errors.NewError(errors.BadRequest, nil), c)
 		return
 	}
+	if param.TagId != 0 {
+		go TagService.AddSearchCount(param.TagId, nil)
+	}
 	blogs, err := BlogService.SearchBlog(&param, page.Limit, page.Offset, nil)
 	if err != nil {
 		log.Printf("search blog error:%v", err)
@@ -101,6 +104,7 @@ func (b *BlogApi) GetBlogById(c *gin.Context) {
 		log.Printf("blog is not exist")
 		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "blog is not exist"), c)
 		return
+
 	}
 	if err := session.Commit(); err != nil {
 		response.BuildErrorResponse(err, c)

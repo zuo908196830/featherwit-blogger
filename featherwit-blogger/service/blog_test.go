@@ -28,7 +28,7 @@ func TestBlogService_AddBlog(t *testing.T) {
 
 func TestBlogService_SearchBlog(t *testing.T) {
 	global.InitGlobal()
-	blogs, err := BlogServiceApp.SearchBlog(2, 1, nil)
+	blogs, err := BlogServiceApp.SearchBlog(2, 1)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

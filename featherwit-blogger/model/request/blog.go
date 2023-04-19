@@ -22,8 +22,6 @@ type UpdateBlogRequest struct {
 }
 
 type SearchBlogRequest struct {
-	ID1  string `json:"id1"`
-	ID2  string `json:"id2"`
-	ID3  string `json:"id3"`
-	Name string `json:"name"`
+	TagId int64  `json:"tagId"`
+	Name  string `json:"name"`
 }

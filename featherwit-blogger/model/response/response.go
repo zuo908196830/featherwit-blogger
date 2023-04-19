@@ -2,8 +2,9 @@ package response
 
 import (
 	"featherwit-blogger/model/errors"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type OkResponse struct {

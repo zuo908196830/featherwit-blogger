@@ -30,14 +30,8 @@ func (b *BlogService) SearchBlog(param *request.SearchBlogRequest, limit int, of
 	if param.Name != "" {
 		s = s.And("title like ?", "%"+param.Name+"%").Or("profile like ?", "%"+param.Name+"%")
 	}
-	if param.ID1 != "" {
-		s = s.Join("INNER", "tag_blog", "id = blog_id").And("tag_id1 = ?", param.ID1)
-	}
-	if param.ID2 != "" {
-		s = s.And("tag_id2 = ?", param.ID2)
-	}
-	if param.ID3 != "" {
-		s = s.And("tag_id3 = ?", param.ID3)
+	if param.TagId != 0 {
+		s = s.Join("INNER", "tag_blog", "id = blog_id").And("tag_id = ?", param.TagId)
 	}
 	err := s.Find(&blogs)
 	if err != nil {

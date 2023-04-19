@@ -20,7 +20,11 @@ func (ta *TagApi) AddTag(c *gin.Context) {
 		return
 	}
 	tags := make([]*model.Tag, 0)
-	TagService.MutilAddTag(param.Tags, "", "", 1, &tags)
+	for _, tagName := range param.TagNames {
+		tags = append(tags, &model.Tag{
+			Name: tagName,
+		})
+	}
 	session := global.DbEngine.NewSession()
 	defer session.Close()
 	if err := session.Begin(); err != nil {
@@ -29,17 +33,14 @@ func (ta *TagApi) AddTag(c *gin.Context) {
 	}
 	n, err := TagService.AddTag(&tags, session)
 	if err != nil {
-		session.Rollback()
-		response.BuildErrorResponse(err, c)
+		response.BuildErrorResponse(err, nil)
 		return
-	}
-	if int(n) != len(tags) {
-		session.Rollback()
-		response.BuildErrorResponse(errors.NewError(errors.ResourceAlreadyExist, nil), c)
+	} else if n < int64(len(tags)) {
+		response.BuildErrorResponse(errors.NewError(errors.ActionFail, nil), nil)
 		return
 	}
 	session.Commit()
-	response.BuildOkResponse(0, nil, c)
+	response.BuildOkResponse(0, &response.SearchTagResponse{Tags: tags}, c)
 }
 
 func (t *TagApi) AddTagBlog(c *gin.Context) {
@@ -62,7 +63,7 @@ func (t *TagApi) AddTagBlog(c *gin.Context) {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	if err := TagService.AddTagBlog(param.BlogId, &param.Tags, session); err != nil {
+	if err := TagService.AddTagBlog(param.BlogId, &param.TagIds, session); err != nil {
 		session.Rollback()
 		response.BuildErrorResponse(err, c)
 		return
