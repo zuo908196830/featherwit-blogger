@@ -1,29 +1,29 @@
 {
     "mysql": {
-        "ip": "127.0.0.1",
+        "ip": "",
         "port": 3306,
         "username": "root",
-        "password": "zuo123456789ke",
-        "database": "the_fool_blogger"
+        "password": "",
+        "database": ""
     },
     "redis": {
-        "ip": "121.89.220.131",
+        "ip": "",
         "port": 6379,
-        "password": "zuo123456789ke",
+        "password": "",
         "database": 0,
         "maxIdle": 16,
         "maxActive": 0,
         "idleTimeout": 300
     },
     "AccessKey": {
-        "accessKeyId": "LTAI5tFYK3trN763zXD7FugE",
-        "accessKeySecret": "MRYoDRW4l5lsPJ4bt5gCukOOqFe6fV",
-        "endpoint": "oss-cn-shenzhen.aliyuncs.com",
-        "imgBucket": "featherwit-blog-img"
+        "accessKeyId": "",
+        "accessKeySecret": "",
+        "endpoint": "",
+        "imgBucket": ""
     },
     "elasticsearch": {
-        "host": "121.89.220.131",
-        "port": 9200,
+        "host": "",
+        "port": ,
         "user": "",
         "password": ""
     }
