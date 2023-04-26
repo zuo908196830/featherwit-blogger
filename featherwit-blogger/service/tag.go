@@ -52,9 +52,12 @@ func (ts *TagService) AddTagBlog(blogID int64, tags *[]int64, s *xorm.Session) e
 	return nil
 }
 
-func (ts *TagService) SearchTag(s *xorm.Session) (*response.SearchTagResponse, error) {
+func (ts *TagService) SearchTag(limit int, offset int, s *xorm.Session) (*response.SearchTagResponse, error) {
 	s = CommonServiceApp.SetSession(s)
 	tags := make([]*model.Tag, 0)
+	if limit != 0 {
+		s = s.Limit(limit, offset)
+	}
 	err := s.Desc("search_count").Find(&tags)
 	if err != nil {
 		return nil, err
@@ -82,14 +85,31 @@ func (ts *TagService) DeleteTagBlogByBlogId(blogId int64, s *xorm.Session) (bool
 	return true, nil
 }
 
-func (ts *TagService) AddSearchCount(tagId int64, s *xorm.Session) {
+func (ts *TagService) AddSearchCount(tagId []int64, s *xorm.Session) {
 	s = CommonServiceApp.SetSession(s)
-	tag := &model.Tag{ID: tagId}
-	_, err := s.Cols("search_count").Get(tag)
+	tags := make([]*model.Tag, 0)
+	err := s.Cols("id", "search_count").In("id", tagId).Find(&tags)
 	if err != nil {
 		log.Printf("select tag error:%v", err)
 		return
 	}
-	tag.SearchCount++
-	s.Where("id = ?", tag.ID).Update(tag)
+	for _, tag := range tags {
+		tag.SearchCount++
+		s.Where("id = ?", tag.ID).Update(tag)
+	}
+}
+
+func (ts *TagService) SearchTagByBlogId(blogId int64, s *xorm.Session) ([]int64, error) {
+	s = CommonServiceApp.SetSession(s)
+	tagBlogs := make([]*model.TagBlog, 0)
+	err := s.Cols("tag_id").Where("blog_id = ?", blogId).Find(&tagBlogs)
+	if err != nil {
+		log.Printf("get tagBlog error:%v", err)
+		return nil, err
+	}
+	tagId := make([]int64, len(tagBlogs))
+	for i := 0; i < len(tagBlogs); i++ {
+		tagId[i] = tagBlogs[i].TagId
+	}
+	return tagId, nil
 }

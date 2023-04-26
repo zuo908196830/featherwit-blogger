@@ -14,11 +14,13 @@ func (b *BlogRouter) InitBlogRouter(Router *gin.RouterGroup) {
 	blogApi := api.ApiGroupApp.SystemApiGroup.BlogApi
 	{
 		blogRouter.POST("add", middle_ware.AddBlog(), blogApi.AddBlog)
-		blogRouter.POST("/:limit/:offset", blogApi.SearchBlog)
+		blogRouter.GET("/search", blogApi.SearchBlog)
 		blogRouter.GET("id/:id", blogApi.GetBlogById)
 		blogRouter.PUT("update/:id", middle_ware.AddBlog(), blogApi.UpdateBlog)
-		blogRouter.GET("count", blogApi.GetBlogCount)
 		blogRouter.DELETE("delete/:blogId", middle_ware.LoginToken(), blogApi.DeleteBlog)
 		blogRouter.POST("cover/:blogId", middle_ware.LoginToken(), blogApi.UpdateCover)
+		blogRouter.POST("star", middle_ware.LoginToken(), blogApi.StarBlog)
+		blogRouter.DELETE("star", middle_ware.LoginToken(), blogApi.UnStarBlog)
+		blogRouter.GET("star", middle_ware.LoginToken(), blogApi.SearchStarBlog)
 	}
 }

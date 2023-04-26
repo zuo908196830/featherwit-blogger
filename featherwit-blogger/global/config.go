@@ -1,9 +1,10 @@
 package global
 
 type Config struct {
-	MySQL     *MySQLConfig     `json:"mysql"`
-	Redis     *RedisConfig     `json:"redis"`
-	AccessKey *AccessKeyConfig `json:"accessKey"`
+	MySQL            *MySQLConfig     `json:"mysql"`
+	Redis            *RedisConfig     `json:"redis"`
+	AccessKey        *AccessKeyConfig `json:"accessKey"`
+	DefaultBlogCover string           `json:"defaultBlogCover"`
 }
 
 type MySQLConfig struct {

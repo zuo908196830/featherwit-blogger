@@ -110,7 +110,12 @@ func (t *TagApi) DeleteTagBlog(c *gin.Context) {
 }
 
 func (t *TagApi) SearchTag(c *gin.Context) {
-	res, err := TagService.SearchTag(nil)
+	var page request.Page
+	if err := c.ShouldBindQuery(&page); err != nil {
+		response.BuildErrorResponse(err, nil)
+		return
+	}
+	res, err := TagService.SearchTag(page.Limit, page.Offset, nil)
 	if err != nil {
 		response.BuildErrorResponse(err, c)
 		return

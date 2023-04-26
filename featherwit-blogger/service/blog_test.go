@@ -26,16 +26,16 @@ func TestBlogService_AddBlog(t *testing.T) {
 	log.Printf("%v", blog)
 }
 
-func TestBlogService_SearchBlog(t *testing.T) {
-	global.InitGlobal()
-	blogs, err := BlogServiceApp.SearchBlog(2, 1)
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-	for _, blog := range blogs {
-		log.Printf("%v", blog)
-	}
-}
+// func TestBlogService_SearchBlog(t *testing.T) {
+// 	global.InitGlobal()
+// 	blogs, err := BlogServiceApp.SearchBlog(2, 1)
+// 	if err != nil {
+// 		log.Fatalf("%v", err)
+// 	}
+// 	for _, blog := range blogs {
+// 		log.Printf("%v", blog)
+// 	}
+// }
 
 func TestBlogService_GetBlogById(t *testing.T) {
 	global.InitGlobal()

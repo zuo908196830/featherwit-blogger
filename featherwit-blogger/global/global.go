@@ -49,6 +49,7 @@ func InitDbEngine() {
 		new(model.Tag),
 		new(model.TagBlog),
 		new(model.Attention),
+		new(model.StarList),
 	)
 	if err != nil {
 		log.Fatalf("create table error:%v", err)
