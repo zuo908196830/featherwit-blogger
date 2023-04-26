@@ -6,6 +6,7 @@ import UserData from '../views/UserDataView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import MarkDown from '../views/MarkDown.vue'
 import BlogView from '../views/BlogView.vue'
+import SearchView from "@/views/SearchView";
 
 Vue.use(VueRouter)
 
@@ -40,6 +41,10 @@ const routes = [
   {
     path: '/blog',
     component: BlogView
+  },
+  {
+    path: '/search',
+    component: SearchView
   }
 ]
 

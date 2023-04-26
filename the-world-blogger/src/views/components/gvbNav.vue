@@ -11,6 +11,7 @@
         <span><a href="/" class="router-link">首页</a></span>
         <span><a href="/about" class="router-link">关于</a></span>
         <span><a href="/search" class="router-link">文章搜索</a></span>
+        <span><a href="/blog/content" class="router-link">写文章</a></span>
       </div>
       <div class="right">
         <span><a href="/login" v-if="!loginStatus">登录</a></span>
@@ -58,6 +59,7 @@ import config from "../../../config/config";
 // window.addEventListener("scroll", scroll)
 
 export default {
+  name: "gvbNav",
   data() {
     return {
       drawer: false,
@@ -147,6 +149,7 @@ export default {
   font-size: 16px;
   z-index: 100;
   color: #2b3539;
+  background-color: white;
 
   .gvb_nav_container {
     width: 1200px;

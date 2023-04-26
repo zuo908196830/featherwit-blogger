@@ -1,56 +1,48 @@
 <template>
-  <div class="index_view">
+  <div class="base_view index_view">
     <gvb-nav/>
-<!--    <div class="gvb_banner">-->
-<!--      <img src="https://featherwit-blog-img.oss-cn-shenzhen.aliyuncs.com/img/7c7dfa29baf2bd0f.jpg"/>-->
-<!--    </div>-->
+    <div class="gvb_banner">
+    </div>
     <div class="gvb_base_container">
-      <div class="gvb_inner_container">
-
+      <div class="gvb_inner_container gvb_index_main">
+        <div class="left">
+          <gvb-blog-list style="margin-top: 20px"></gvb-blog-list>
+        </div>
+        <div class="right">
+          <gvb-tag-card :tag-nums="15"></gvb-tag-card>
+          <gvb-hot-card style="margin-top: 20px"></gvb-hot-card>
+        </div>
       </div>
     </div>
-    <div class="gvb_footer"></div>
+    <gvb-footer></gvb-footer>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import config from '../../config/config'
 import gvbNav from './components/gvbNav'
-// import gvbBanner from "@/views/components/gvbBanner";
+import gvbTagCard from "@/views/components/index/gvbTagCard";
+import gvbFooter from "@/views/components/gvbFooter";
+import gvbHotCard from "@/views/components/index/gvbHotCard";
+import gvbBlogList from "@/views/components/index/gvbBlogList";
+import GvbBlogList from "@/views/components/index/gvbBlogList";
 
 export default {
   components: {
+    GvbBlogList,
     gvbNav,
-    // gvbBanner
+    gvbTagCard,
+    gvbFooter,
+    gvbHotCard,
+    gvbBlogList
   },
   data() {
     return {
-      drawer: false,
-      username: localStorage.getItem("user"),
-      loginStatus: localStorage.getItem("loginStatus"),
-      searchName: ""
     }
   },
   methods: {
-    logout() {
-      axios.get("/api/user/logout").then(res => {
-        if (res.data.code === 0) {
-          localStorage.removeItem("user")
-          axios.defaults.headers.common['Authorization'] = ""
-          this.username = ""
-          this.loginStatus = false
-          this.drawer = false
-          localStorage.setItem("loginStatus", false)
-          if (this.$route.path === "/user/data") {
-            this.$router.push('/')
-          }
-        }
-      })
-    },
   },
   created() {
-    axios.defaults.baseURL = config.host
     if (localStorage.getItem("token")) {
       axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
       axios.get("/api/user/token/login").then(res => {
@@ -97,34 +89,48 @@ a {
   text-decoration: none;
 }
 
+li {
+  list-style: none;
+}
 
-.index_view {
+.base_view {
   background-color: #f0eeee;
 
   .gvb_base_container {
-    width: 1200px;
+    top: 120px;
     display: flex;
     justify-content: center;
+
     .gvb_inner_container {
-      background-color: white;
-      min-height: 1000px;
+      width: 1200px;
       margin-top: 20px;
     }
   }
 
-  .gvb_banner{
-    height: 600px;
+  .gvb_banner {
+    height: 50px;
     width: 100%;
-    background-color: darksalmon;
     overflow: hidden;
+  }
+}
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+.index_view {
+  .gvb_inner_container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .gvb_index_main {
+    .left {
+      width: calc(100% - 416px);
+    }
+
+    .right {
+      width: 396px;
     }
   }
+
+
 }
 
 .user_show {

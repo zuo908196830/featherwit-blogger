@@ -9,6 +9,7 @@ import axios from 'axios'
 import 'mavon-editor/dist/css/index.css'
 import mavonEditor from 'mavon-editor'
 import globalVal from './global/globalVal.vue'
+import {store} from "@/stores/store";
 
 Vue.config.productionTip = false
 Vue.prototype.GLOBAL = globalVal
@@ -17,6 +18,7 @@ Vue.use(mavonEditor);
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
 
