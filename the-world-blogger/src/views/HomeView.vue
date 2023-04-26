@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import gvbNav from './components/gvbNav'
 import gvbTagCard from "@/views/components/index/gvbTagCard";
 import gvbFooter from "@/views/components/gvbFooter";
@@ -43,43 +42,7 @@ export default {
   methods: {
   },
   created() {
-    if (localStorage.getItem("token")) {
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
-      axios.get("/api/user/token/login").then(res => {
-        if (res.data.code === 0) {
-          if (res.data.data.nickname) {
-            this.username = res.data.data.nickname
-            localStorage.setItem("user", res.data.data.nickname)
-          } else {
-            this.username = res.data.data.username
-            localStorage.setItem("user", res.data.data.username)
-          }
-          this.loginStatus = true
-          localStorage.setItem("loginStatus", true)
-        } else {
-          localStorage.setItem("loginStatus", false)
-          localStorage.removeItem("user")
-          this.loginStatus = false
-          this.username = false
-          axios.defaults.headers.common['Authorization'] = ""
-        }
 
-      }).catch(() => {
-        localStorage.setItem("loginStatus", false)
-        localStorage.removeItem("user")
-        this.loginStatus = false
-        this.username = false
-        axios.defaults.headers.common['Authorization'] = ""
-      })
-      // this.loginStatus()
-    } else {
-      localStorage.setItem("loginStatus", false)
-      localStorage.removeItem("user")
-      axios.defaults.headers.common['Authorization'] = ""
-      this.username = ""
-      this.loginStatus = false
-    }
-    this.loginStatus = localStorage.getItem('loginStatus')
   },
 }
 </script>

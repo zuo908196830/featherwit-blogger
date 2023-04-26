@@ -7,5 +7,8 @@ export const store = new Vuex.Store({
     state: {
         tagId: 0,
         searchName: "",
+        loginStatus: false,
+        nickname: "",
+        token: "",
     }
 })

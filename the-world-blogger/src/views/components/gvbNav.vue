@@ -1,11 +1,10 @@
 <template>
   <div :class="{
     gvb_nav: true,
-    // show: is_show
   }">
     <div class="gvb_nav_container">
       <div class="logo">
-        <div>愚者世界</div>
+        <div>这是一个博客</div>
       </div>
       <div class="left">
         <span><a href="/" class="router-link">首页</a></span>
@@ -43,20 +42,6 @@
 <script>
 import axios from "axios";
 import config from "../../../config/config";
-// import {ref} from "vue"
-
-// const is_show = ref(false)
-//
-// function scroll() {
-//   let top = document.documentElement.scrollTop
-//   if (top >= 200) {
-//     is_show.value = true
-//   } else {
-//     is_show.value = false
-//   }
-// }
-//
-// window.addEventListener("scroll", scroll)
 
 export default {
   name: "gvbNav",
@@ -115,7 +100,6 @@ export default {
         this.username = false
         axios.defaults.headers.common['Authorization'] = ""
       })
-      // this.loginStatus()
     } else {
       localStorage.setItem("loginStatus", false)
       localStorage.removeItem("user")
@@ -185,19 +169,5 @@ export default {
     text-align: right;
   }
 }
-
-//.gvb_nav.show {
-//  background-color: white;
-//  box-shadow: 1px 1px 5px #0003;
-//  color: #2b3539;
-//
-//  a {
-//    color: #2b3539;
-//
-//    &:hover {
-//      color: cornflowerblue;
-//    }
-//  }
-//}
 
 </style>
