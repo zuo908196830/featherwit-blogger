@@ -118,3 +118,66 @@ func (u *UserService) FansUpdate(username string, num int, s *xorm.Session) erro
 	}
 	return nil
 }
+
+func (u *UserService) ConcernUser(username string, concernUsername string, s *xorm.Session) error {
+	s = CommonServiceApp.SetSession(s)
+	concern := &model.ConcernList{
+		Username:        username,
+		ConcernUsername: concernUsername,
+	}
+	exist, err := s.Exist(concern)
+	if err != nil {
+		log.Printf("select concern_list error:%v", err)
+		return err
+	} else if exist {
+		return nil
+	}
+	_, err = s.Insert(concern)
+	if err != nil {
+		log.Printf("Insert concern_list error:%v", err)
+		return err
+	}
+	return nil
+}
+
+func (u *UserService) UnConcernUser(username string, concernUsername string, s *xorm.Session) error {
+	s = CommonServiceApp.SetSession(s)
+	concern := &model.ConcernList{
+		Username:        username,
+		ConcernUsername: concernUsername,
+	}
+	exist, err := s.Exist(concern)
+	if err != nil {
+		log.Printf("select concern_list error:%v", err)
+		return err
+	} else if !exist {
+		return errors.NewError(errors.ResourceNotExist, nil)
+	}
+	_, err = s.Delete(concern)
+	if err != nil {
+		log.Printf("delete concern_list error:%v", err)
+		return err
+	}
+	return nil
+}
+
+func (u *UserService) SearchConcernUser(username string, limit int, offset int, s *xorm.Session) ([]*model.User, error) {
+	s = CommonServiceApp.SetSession(s)
+	concerns := make([]*model.ConcernList, 0)
+	err := s.Where("username = ?", username).Limit(limit, offset).Decr("create_at").Find(&concerns)
+	if err != nil {
+		log.Printf("select concern_list error:%v", err)
+		return nil, err
+	}
+	usernames := make([]string, len(concerns))
+	for i := 0; i < len(concerns); i++ {
+		usernames[i] = concerns[i].ConcernUsername
+	}
+	users := make([]*model.User, 0)
+	err = s.In("username", usernames).Find(&users)
+	if err != nil {
+		log.Printf("select concern_list error:%v", err)
+		return nil, err
+	}
+	return users, nil
+}

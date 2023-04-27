@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="gvb_md_view">
         <div>
             <el-input type="textarea" autosize placeholder="请输入题目" v-model="title">
             </el-input>
@@ -42,8 +42,6 @@ export default {
         },
         // 提交
         submit() {
-            console.log(this.content);
-            console.log(this.html);
             let blogData = {}
             blogData.title = this.title
             blogData.content = this.content
@@ -52,7 +50,7 @@ export default {
                 if (res.data.code === 0) {
                     // todo 成功后跳转文章列表
                     this.$message({
-                        message: '恭喜你，这是一条成功消息',
+                        message: '提交成功',
                         type: 'success'
                     });
                     this.$router.push('/')
@@ -93,6 +91,15 @@ export default {
             });
             this.$router.push('/login')
         }
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
     }
 }
 </script>
+
+<style lang="scss">
+.gvb_md_view {
+  img {
+    font-size: 87%;
+  }
+}
+</style>

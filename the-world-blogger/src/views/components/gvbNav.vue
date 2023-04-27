@@ -15,10 +15,10 @@
       <div class="right">
         <span><a href="/login" v-if="!loginStatus">登录</a></span>
         <el-dropdown v-if="loginStatus">
-        <span class="el-dropdown-link" v-if="loginStatus">
-          {{ username }}
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
+          <span class="el-dropdown-link" v-if="loginStatus">
+            {{ username }}
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>
               <a href="/user/data">个人详情</a>
@@ -122,6 +122,10 @@ export default {
   font-size: 12px;
 }
 
+a {
+  color: #2b3539;
+}
+
 .gvb_nav {
   box-shadow: 1px 1px 5px #0003;
   width: 100%;
@@ -169,5 +173,4 @@ export default {
     text-align: right;
   }
 }
-
 </style>

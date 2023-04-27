@@ -214,3 +214,79 @@ func (u *UserApi) AddAttentionUser(c *gin.Context) {
 		return
 	}
 }
+
+func (u *UserApi) ConcernUser(c *gin.Context) {
+	var param request.ConcernRequest
+	if err := c.ShouldBindJSON(&param); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	session := global.DbEngine.NewSession()
+	defer session.Close()
+	if err := session.Begin(); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	exist, err := UserService.UserExist(param.ConcernUsers, session)
+	if err != nil {
+		session.Rollback()
+		response.BuildErrorResponse(err, c)
+		return
+	} else if !exist {
+		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "user is not exist"), c)
+		return
+	}
+	username := CommonService.GetUsername(c)
+	go UserService.FansUpdate(param.ConcernUsers, 1, nil)
+	err = UserService.ConcernUser(username, param.ConcernUsers, session)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	if err := session.Commit(); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	response.BuildOkResponse(0, nil, c)
+}
+
+func (u *UserApi) UnConcernUser(c *gin.Context) {
+	var param request.ConcernRequest
+	if err := c.ShouldBindJSON(&param); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	session := global.DbEngine.NewSession()
+	defer session.Close()
+	if err := session.Begin(); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	username := CommonService.GetUsername(c)
+	go UserService.FansUpdate(param.ConcernUsers, -1, nil)
+	if err := UserService.UnConcernUser(username, param.ConcernUsers, session); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	if err := session.Commit(); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	response.BuildOkResponse(0, nil, c)
+}
+
+func (u *UserApi) SearchConcernUser(c *gin.Context) {
+	var page request.Page
+	if err := c.ShouldBindQuery(&page); err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	username := CommonService.GetUsername(c)
+	users, err := UserService.SearchConcernUser(username, page.Limit, page.Offset, nil)
+	if err != nil {
+		response.BuildErrorResponse(err, c)
+		return
+	}
+	response.BuildOkResponse(0, users, c)
+	return
+}

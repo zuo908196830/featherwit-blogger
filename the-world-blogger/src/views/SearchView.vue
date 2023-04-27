@@ -18,7 +18,7 @@
         </div>
         <div class="gvb_search_action">
           <div class="gvb_search_order">
-            <span :class="{active: order === 1}" @click="checkOrder(1)">最早发布</span>
+            <span :class="{active: order === 1}" @click="checkOrder(1)">最近发布</span>
             <span :class="{active: order === 2}" @click="checkOrder(2)">最多浏览</span>
             <span :class="{active: order === 3}" @click="checkOrder(3)">最多评论</span>
             <span :class="{active: order === 4}" @click="checkOrder(4)">最多收藏</span>

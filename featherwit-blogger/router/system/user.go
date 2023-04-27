@@ -21,5 +21,8 @@ func (u *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 		userRouter.GET("token/login", middle_ware.LoginToken(), UserApi.TokenLogin)
 		userRouter.GET("attention/:limit/:offset", middle_ware.LoginToken(), UserApi.AttentionUser)
 		userRouter.POST("attention/add", middle_ware.LoginToken(), UserApi.AddAttentionUser)
+		userRouter.POST("concern", middle_ware.LoginToken(), UserApi.ConcernUser)
+		userRouter.DELETE("concern", middle_ware.LoginToken(), UserApi.UnConcernUser)
+		userRouter.GET("concern", middle_ware.LoginToken(), UserApi.SearchConcernUser)
 	}
 }
