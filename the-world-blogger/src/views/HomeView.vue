@@ -1,8 +1,7 @@
 <template>
   <div class="base_view index_view">
     <gvb-nav/>
-    <div class="gvb_banner">
-    </div>
+    <gvb-banner/>
     <div class="gvb_base_container">
       <div class="gvb_inner_container gvb_index_main">
         <div class="left">
@@ -25,6 +24,7 @@ import gvbFooter from "@/views/components/gvbFooter";
 import gvbHotCard from "@/views/components/index/gvbHotCard";
 import gvbBlogList from "@/views/components/index/gvbBlogList";
 import GvbBlogList from "@/views/components/index/gvbBlogList";
+import gvbBanner from "@/views/components/gvbBanner";
 
 export default {
   components: {
@@ -33,7 +33,8 @@ export default {
     gvbTagCard,
     gvbFooter,
     gvbHotCard,
-    gvbBlogList
+    gvbBlogList,
+    gvbBanner,
   },
   data() {
     return {
@@ -68,12 +69,6 @@ li {
       width: 1200px;
       margin-top: 20px;
     }
-  }
-
-  .gvb_banner {
-    height: 50px;
-    width: 100%;
-    overflow: hidden;
   }
 }
 

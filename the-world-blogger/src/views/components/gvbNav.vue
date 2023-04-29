@@ -24,7 +24,7 @@
               <a href="/user/data">个人详情</a>
             </el-dropdown-item>
             <el-dropdown-item>
-              <a>收藏夹</a>
+              <a href="/blog/star">收藏夹</a>
             </el-dropdown-item>
             <el-dropdown-item>
               <a>历史记录</a>

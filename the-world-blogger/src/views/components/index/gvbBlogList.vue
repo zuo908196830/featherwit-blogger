@@ -56,11 +56,19 @@ export default {
       tagId: 0,
     }
   },
+  props: {
+    star: Boolean,
+  },
   methods: {
     searchBlogs() {
-      var url = "/api/blog/search?order=1&limit=" + this.limit + "&offset=" + this.offset
-      if (this.tagId !== 0) {
-        url = url + "&tagId=" + this.tagId
+      var url = ""
+      if (this.$props.star) {
+        url = "/api/blog/star?limit=" + this.limit + "&offset=" + this.offset
+      } else {
+        url = "/api/blog/search?order=1&limit=" + this.limit + "&offset=" + this.offset
+        if (this.tagId !== 0) {
+          url = url + "&tagId=" + this.tagId
+        }
       }
       axios.get(url).then(res => {
         if (res.data.code === 0) {

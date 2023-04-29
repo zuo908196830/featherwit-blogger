@@ -1,8 +1,7 @@
 <template>
   <div class="base_view">
     <gvb-nav/>
-    <div class="gvb_banner">
-    </div>
+    <gvb-banner/>
     <div class="gvb_base_container">
       <div class="gvb_inner_container gvb_index_main">
         <div class="gvb_search_head">
@@ -69,10 +68,12 @@ import gvbNav from "@/views/components/gvbNav";
 import gvbFooter from "@/views/components/gvbFooter";
 import axios from "axios";
 import Date from '@/utils/date'
+import GvbBanner from "@/views/components/gvbBanner";
 
 export default {
   name: "SearchView",
   components: {
+    GvbBanner,
     gvbNav,
     gvbFooter,
   },

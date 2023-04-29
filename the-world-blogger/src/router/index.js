@@ -7,6 +7,7 @@ import RegisterView from '../views/RegisterView.vue'
 import MarkDown from '../views/MarkDown.vue'
 import BlogView from '../views/BlogView.vue'
 import SearchView from "@/views/SearchView";
+import StarBlogView from "@/views/StarBlogView";
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,10 @@ const routes = [
   {
     path: '/search',
     component: SearchView
+  },
+  {
+    path: '/blog/star',
+    component: StarBlogView
   }
 ]
 

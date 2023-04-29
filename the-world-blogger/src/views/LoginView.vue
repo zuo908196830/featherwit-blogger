@@ -1,5 +1,7 @@
 <template>
     <div class="login_view">
+        <gvb-nav/>
+        <gvb-banner/>
         <div class="login_box">
             <div>
                 <h2 class="login_show">登录</h2>
@@ -35,8 +37,14 @@
 <script>
 import axios from "axios"
 import LoginFunc from "../js/LoginFunc"
+import gvbNav from "@/views/components/gvbNav";
+import gvbBanner from "@/views/components/gvbBanner";
 
 export default {
+    components: {
+        gvbNav,
+        gvbBanner,
+    },
     data() {
         return {
             loginData: {

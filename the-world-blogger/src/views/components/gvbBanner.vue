@@ -8,6 +8,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.gvb_banner {
+  height: 50px;
+  width: 100%;
+  overflow: hidden;
+}
 </style>
