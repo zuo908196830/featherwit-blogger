@@ -19,3 +19,13 @@ type SearchBlogs struct {
 	Total int64         `json:"total"`
 	Blogs []*model.Blog `json:"blogs"`
 }
+
+type UserShow struct {
+	Nickname string `json:"nickname"`
+	Headshot string `json:"headshot"`
+}
+
+type GetBlog struct {
+	Blog *model.Blog `json:"blog"`
+	User *UserShow   `json:"user"`
+}

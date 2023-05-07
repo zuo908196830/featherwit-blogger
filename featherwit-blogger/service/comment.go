@@ -123,13 +123,23 @@ func (cs *CommentService) GetCommentByBlogId(blogId int64, limit int, offset int
 	return comments, nil
 }
 
-func (cs *CommentService) GetCommentByParentID(parentId int64, limit int, offset int, s *xorm.Session) ([]*model.Comment, error) {
+func (cs *CommentService) GetCommentByParentID(parentId int64, s *xorm.Session) ([]*model.Comment, error) {
 	s = CommonServiceApp.SetSession(s)
 	comments := make([]*model.Comment, 0)
-	err := s.Where("parent_id = ?", parentId).Limit(limit, offset).Find(&comments)
+	err := s.Where("parent_id = ?", parentId).Find(&comments)
 	if err != nil {
 		log.Printf("select comment by parentId error:%v", err)
 		return nil, err
 	}
 	return comments, nil
+}
+
+func (cs *CommentService) GetCount(blogId int64, s *xorm.Session) (int, error) {
+	s = CommonServiceApp.SetSession(s)
+	n, err := s.Where("blog_id = ?", blogId).Table("comment").Count()
+	if err != nil {
+		log.Printf("select comment error:%v", err)
+		return 0, err
+	}
+	return int(n), nil
 }

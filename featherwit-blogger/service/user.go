@@ -181,3 +181,18 @@ func (u *UserService) SearchConcernUser(username string, limit int, offset int, 
 	}
 	return users, nil
 }
+
+func (u *UserService) GetNicknameAndCover(username string, s *xorm.Session) (string, string, error) {
+	s = CommonServiceApp.SetSession(s)
+	var user model.User
+	if has, err := s.Cols("nickname", "headshot").Where("username = ?", username).Get(&user); err != nil {
+		log.Printf("select user error:%v", err)
+		return "", "", err
+	} else if !has {
+		return "", "", errors.NewError(errors.ResourceNotExist, nil)
+	}
+	if user.Nickname == "" {
+		return username, user.Headshot, nil
+	}
+	return user.Nickname, user.Headshot, nil
+}

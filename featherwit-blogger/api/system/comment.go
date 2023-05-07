@@ -194,13 +194,14 @@ func (ca *CommentApi) GetComment(c *gin.Context) {
 	// todo 通过一级评论去查找对应的二级评论
 	commentTree := make([]*response.CommentsTree, 0)
 	for _, comment := range comments {
-		children, err := CommentService.GetCommentByParentID(comment.ID, 3, 0, session)
+		children, err := CommentService.GetCommentByParentID(comment.ID, session)
 		if err != nil {
 			response.BuildErrorResponse(err, c)
 			return
 		}
 		commentTree = append(commentTree, &response.CommentsTree{
 			Comment:         comment,
+			ChildrenCount:   len(children),
 			ChildrenComment: children,
 		})
 	}

@@ -115,12 +115,22 @@ func (b *BlogApi) GetBlogById(c *gin.Context) {
 		return
 
 	}
+	ret := new(response.GetBlog)
+	ret.Blog = blog
+	if nickname, headshot, err := UserService.GetNicknameAndCover(blog.Username, session); err != nil {
+		response.BuildErrorResponse(err, c)
+	} else {
+		ret.User = &response.UserShow{
+			Nickname: nickname,
+			Headshot: headshot,
+		}
+	}
 	go b.TagAdd1(bid.ID)
 	if err := session.Commit(); err != nil {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	response.BuildOkResponse(0, blog, c)
+	response.BuildOkResponse(0, ret, c)
 }
 
 func (b *BlogApi) UpdateBlog(c *gin.Context) {
