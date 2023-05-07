@@ -1,6 +1,6 @@
 module featherwit-blogger
 
-go 1.18
+go 1.19
 
 require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible
