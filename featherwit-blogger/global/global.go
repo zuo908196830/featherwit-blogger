@@ -31,7 +31,7 @@ func InitConfig() {
 }
 
 func NewDbEngine() {
-	url := GlobalConfig.MySQL.Username + ":" + GlobalConfig.MySQL.Password + "@tcp(" + GlobalConfig.MySQL.Ip + ":" + fmt.Sprintf("%d)/", GlobalConfig.MySQL.Port) + GlobalConfig.MySQL.Database
+	url := GlobalConfig.MySQL.Username + ":" + GlobalConfig.MySQL.Password + "@tcp(" + GlobalConfig.MySQL.Ip + ":" + fmt.Sprintf("%d)/", GlobalConfig.MySQL.Port) + GlobalConfig.MySQL.Database + "?charset=utf8mb4"
 	db, err := xorm.NewEngine("mysql", url)
 	if err != nil {
 		log.Fatalf("init db failed, err:%v", err)
@@ -52,14 +52,6 @@ func InitDbEngine() {
 		new(model.StarList),
 		new(model.ConcernList),
 	)
-	_, err = DbEngine.Exec("ALTER TABLE `users` ENGINE=InnoDB DEFAULT CHARSET=utf8;")
-	_, err = DbEngine.Exec("ALTER TABLE `blog` ENGINE=InnoDB DEFAULT CHARSET=utf8;")
-	_, err = DbEngine.Exec("ALTER TABLE `comment` ENGINE=InnoDB DEFAULT CHARSET=utf8;")
-	_, err = DbEngine.Exec("ALTER TABLE `tags` ENGINE=InnoDB DEFAULT CHARSET=utf8;")
-	_, err = DbEngine.Exec("ALTER TABLE `tag_blog` ENGINE=InnoDB DEFAULT CHARSET=utf8;")
-	_, err = DbEngine.Exec("ALTER TABLE `attention` ENGINE=InnoDB DEFAULT CHARSET=utf8;")
-	_, err = DbEngine.Exec("ALTER TABLE `star_list` ENGINE=InnoDB DEFAULT CHARSET=utf8;")
-	_, err = DbEngine.Exec("ALTER TABLE `concern_list` ENGINE=InnoDB DEFAULT CHARSET=utf8;")
 	if err != nil {
 		log.Fatalf("create table error:%v", err)
 	}
