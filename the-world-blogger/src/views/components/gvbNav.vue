@@ -14,6 +14,7 @@
       </div>
       <div class="right">
         <span><a href="/login" v-if="!loginStatus">登录</a></span>
+        <img v-if="loginStatus" class="me-view-picture" :src="headshot">
         <el-dropdown v-if="loginStatus">
           <span class="el-dropdown-link" v-if="loginStatus">
             {{ username }}
@@ -50,7 +51,8 @@ export default {
       drawer: false,
       username: localStorage.getItem("user"),
       loginStatus: localStorage.getItem("loginStatus"),
-      searchName: ""
+      searchName: "",
+      headshot: localStorage.getItem("headshot"),
     }
   },
   methods: {
@@ -138,6 +140,15 @@ a {
   z-index: 100;
   color: #2b3539;
   background-color: white;
+
+  .me-view-picture {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    vertical-align: middle;
+    background-color: #5fb878;
+  }
 
   .gvb_nav_container {
     width: 1200px;

@@ -8,7 +8,8 @@ export const store = new Vuex.Store({
         tagId: 0,
         searchName: "",
         loginStatus: false,
-        nickname: "",
+        username: "",
         token: "",
+        headshot:"",
     }
 })

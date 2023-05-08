@@ -2,6 +2,7 @@ package service
 
 import (
 	"featherwit-blogger/model"
+	"featherwit-blogger/model/response"
 	"log"
 
 	"xorm.io/xorm"
@@ -11,13 +12,13 @@ type CommentService struct{}
 
 var CommentServiceApp = new(CommentService)
 
-func (cs *CommentService) AddComment(comment *model.Comment, s *xorm.Session) error {
+func (cs *CommentService) AddComment(comment *model.Comment, s *xorm.Session) (*model.Comment, error) {
 	s = CommonServiceApp.SetSession(s)
 	_, err := s.Insert(comment)
 	if err != nil {
-		return err
+		return nil, err
 	} else {
-		return nil
+		return comment, nil
 	}
 }
 
@@ -115,7 +116,7 @@ func (cs *CommentService) DeleteCommentByBlogId(blogId int64, s *xorm.Session) (
 func (cs *CommentService) GetCommentByBlogId(blogId int64, limit int, offset int, s *xorm.Session) ([]*model.Comment, error) {
 	s = CommonServiceApp.SetSession(s)
 	comments := make([]*model.Comment, 0)
-	err := s.Where("blog_id = ?", blogId).And("parent_id < 0").Limit(limit, offset).Find(&comments)
+	err := s.Where("blog_id = ?", blogId).Desc("create_at").And("parent_id < 0").Limit(limit, offset).Find(&comments)
 	if err != nil {
 		log.Printf("select comment by blog id error:%v", err)
 		return nil, err
@@ -123,15 +124,28 @@ func (cs *CommentService) GetCommentByBlogId(blogId int64, limit int, offset int
 	return comments, nil
 }
 
-func (cs *CommentService) GetCommentByParentID(parentId int64, s *xorm.Session) ([]*model.Comment, error) {
+func (cs *CommentService) GetCommentByParentID(parentId int64, s *xorm.Session) ([]*response.ChildrenComment, error) {
 	s = CommonServiceApp.SetSession(s)
 	comments := make([]*model.Comment, 0)
-	err := s.Where("parent_id = ?", parentId).Find(&comments)
+	err := s.Where("parent_id = ?", parentId).Desc("create_at").Find(&comments)
 	if err != nil {
 		log.Printf("select comment by parentId error:%v", err)
 		return nil, err
 	}
-	return comments, nil
+	res := make([]*response.ChildrenComment, len(comments))
+	for i := 0; i < len(comments); i++ {
+		res[i] = new(response.ChildrenComment)
+		res[i].Comment = comments[i]
+		nickname, headshot, err := UserServiceApp.GetNicknameAndCover(comments[i].Username, s)
+		if err != nil {
+			return nil, err
+		}
+		res[i].User = &response.UserShow{
+			Nickname: nickname,
+			Headshot: headshot,
+		}
+	}
+	return res, nil
 }
 
 func (cs *CommentService) GetCount(blogId int64, s *xorm.Session) (int, error) {

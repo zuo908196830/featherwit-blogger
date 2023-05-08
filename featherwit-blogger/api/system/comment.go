@@ -68,7 +68,7 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 		response.BuildErrorResponse(err, c)
 		return
 	}
-	err = CommentService.AddComment(comment, session)
+	cm, err := CommentService.AddComment(comment, session)
 	if err != nil {
 		log.Printf("database error:%v", err)
 		session.Rollback()
@@ -98,8 +98,22 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 			return
 		}
 	}
+	nickname, headshot, err := UserService.GetNicknameAndCover(username, session)
+	if err != nil {
+		session.Rollback()
+		response.BuildErrorResponse(err, c)
+		return
+	}
 	session.Commit()
-	response.BuildOkResponse(0, nil, c)
+	response.BuildOkResponse(0, &response.CommentsTree{
+		Comment:         cm,
+		ChildrenCount:   0,
+		ChildrenComment: make([]*response.ChildrenComment, 0),
+		User: &response.UserShow{
+			Nickname: nickname,
+			Headshot: headshot,
+		},
+	}, c)
 }
 
 func (ca *CommentApi) DeleteComment(c *gin.Context) {
@@ -199,11 +213,23 @@ func (ca *CommentApi) GetComment(c *gin.Context) {
 			response.BuildErrorResponse(err, c)
 			return
 		}
+		nickname, headshot, err := UserService.GetNicknameAndCover(comment.Username, nil)
+		if err != nil {
+			response.BuildErrorResponse(err, c)
+			return
+		}
 		commentTree = append(commentTree, &response.CommentsTree{
-			Comment:         comment,
-			ChildrenCount:   len(children),
+			Comment:       comment,
+			ChildrenCount: len(children),
+			User: &response.UserShow{
+				Nickname: nickname,
+				Headshot: headshot,
+			},
 			ChildrenComment: children,
 		})
 	}
-	response.BuildOkResponse(0, commentTree, c)
+	response.BuildOkResponse(0, &response.Comments{
+		Count:        len(commentTree),
+		CommentsTree: commentTree,
+	}, c)
 }

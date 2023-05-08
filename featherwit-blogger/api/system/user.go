@@ -57,6 +57,7 @@ func (u *UserApi) Login(c *gin.Context) {
 	response.BuildOkResponse(0, &response.Login{
 		Username: user.Username,
 		Nickname: user.Nickname,
+		Headshot: user.Headshot,
 		Token:    token,
 	}, c)
 }

@@ -10,7 +10,7 @@ type Comment struct {
 	BlogId       int64     `json:"blogId" xorm:"bigint index"`
 	ParentId     int64     `json:"parentId" xorm:"bigint"` //如果是二级评论的话，所属一级评论id，一级评论时为负数
 	ReplyId      int64     `json:"replyId" xorm:"bigint"`  //如果是回复某二级评论的评论，二级评论id，否则为负数
-	Content      string    `json:"Content" xorm:"text"`
+	Content      string    `json:"content" xorm:"text"`
 	LikeCount    int64     `json:"likeCount" xorm:"bigint default 0"`
 	CommentCount int64     `json:"commentCount" xorm:"bigint default 0"`
 }

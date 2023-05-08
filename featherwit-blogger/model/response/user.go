@@ -4,6 +4,7 @@ type Login struct {
 	Username string `json:"username"`
 	Nickname string `json:"nickname"`
 	Token    string `json:"token"`
+	Headshot string `json:"headshot"`
 }
 
 type UserData struct {

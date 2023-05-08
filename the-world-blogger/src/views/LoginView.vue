@@ -62,10 +62,11 @@ export default {
                     this.loginCode = res.data.code
                     if (this.loginCode === 0) {
                         if (res.data.data.nickname !== "") {
-                            LoginFunc.setLoginStatus(res.data.data.nickname, res.data.data.token)
+                            LoginFunc.setLoginStatus(res.data.data.nickname, res.data.data.token, res.data.data.headshot)
                         } else {
-                            LoginFunc.setLoginStatus(res.data.data.username, res.data.data.token)
+                            LoginFunc.setLoginStatus(res.data.data.username, res.data.data.token, res.data.data.headshot)
                         }
+                        this.$store.state.username = res.data.data.username
                         this.$router.push("/")
                     }
                 } else {
