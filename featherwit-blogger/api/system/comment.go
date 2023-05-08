@@ -27,7 +27,6 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 		Username: username,
 		BlogId:   param.BlogId,
 		ParentId: param.ParentId,
-		ReplyId:  param.ReplyId,
 		Content:  param.Content,
 	}
 	// 添加BlogId ParaentId ReplyId存在性校验
@@ -46,16 +45,6 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 			return
 		} else if !ok {
 			response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "parent comment is not exist"), c)
-			return
-		}
-	}
-	if param.ReplyId >= 0 {
-		ok, err = CommentService.CommentExist(param.ReplyId, nil)
-		if err != nil {
-			response.BuildErrorResponse(err, c)
-			return
-		} else if !ok {
-			response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "reply comment is not exist"), c)
 			return
 		}
 	}
