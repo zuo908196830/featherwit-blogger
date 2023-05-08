@@ -109,7 +109,7 @@ export default {
           newChildren.comment = res.data.data.comment
           this.$props.comment.childrenComment.unshift(newChildren)
           this.$props.comment.childrenCount += 1
-          this.reply = true
+          this.open = true
         } else if (res.data.code === 1006) {
           this.$message({type: 'warning', message: '未登录', showClose: true})
           this.$router.push('login')
