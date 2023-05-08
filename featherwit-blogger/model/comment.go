@@ -13,6 +13,7 @@ type Comment struct {
 	Content      string    `json:"content" xorm:"text"`
 	LikeCount    int64     `json:"likeCount" xorm:"bigint default 0"`
 	CommentCount int64     `json:"commentCount" xorm:"bigint default 0"`
+	Charset      string    `xorm:"'ENGINE=InnoDB CHARSET=utf8'"`
 }
 
 func (c *Comment) TableName() string {

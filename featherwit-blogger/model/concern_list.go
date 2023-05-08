@@ -7,4 +7,5 @@ type ConcernList struct {
 	ConcernUsername string    `json:"concernUsername" xorm:"varchar(25) not null"`
 	CreateAt        time.Time `json:"createAt" xorm:"created"`
 	UpdateAt        time.Time `json:"updateAt" xorm:"updated"`
+	Charset         string    `xorm:"'ENGINE=InnoDB CHARSET=utf8'"`
 }

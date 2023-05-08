@@ -14,6 +14,7 @@ type Blog struct {
 	LikeCount    int64     `json:"likeCount" xorm:"bigint not null default 0"`
 	Cover        string    `json:"cover" xorm:"varchar(200)"` //封面
 	Profile      string    `json:"profile" xorm:"text"`       //文章简介
+	Charset      string    `xorm:"'ENGINE=InnoDB CHARSET=utf8'"`
 }
 
 func (b *Blog) TableName() string {
