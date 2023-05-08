@@ -98,6 +98,7 @@ export default {
       const data = {
         blogId: Number(this.blogId),
         parentId: Number(this.comment.comment.id),
+        replyId: -1,
         content: this.reply.content,
       }
       axios.post('/api/comment/add', data).then(res => {
