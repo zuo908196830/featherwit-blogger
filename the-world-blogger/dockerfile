@@ -1,7 +1,7 @@
 FROM node:18.12.1
 ENV WORK /usr/local/world/the-world-blogger
 RUN mkdir /usr/local/world
-ADD ../the-world-blogger.tar.gz /usr/local/world
+ADD the-world-blogger.tar.gz /usr/local/world
 WORKDIR $WORK
 EXPOSE 80
 CMD ["npm", "run", "serve"]
