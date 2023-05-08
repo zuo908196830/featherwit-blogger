@@ -52,6 +52,10 @@ func InitDbEngine() {
 		new(model.StarList),
 		new(model.ConcernList),
 	)
+	_, err = DbEngine.Exec("ALTER TABLE `users` ENGINE=InnoDB DEFAULT CHARSET=utf8;")
+	if err != nil {
+		log.Fatalf("alter table error:%v", err)
+	}
 	if err != nil {
 		log.Fatalf("create table error:%v", err)
 	}

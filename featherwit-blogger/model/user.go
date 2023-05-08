@@ -14,7 +14,6 @@ type User struct {
 	Profile   string    `json:"profile" xorm:"varchar(400)"` //简介
 	Headshot  string    `json:"headshot" xorm:"varchar(200)"`
 	FansCount int64     `json:"fansCount" xorm:"bigint not null default 0"`
-	Charset   string    `xorm:"'ENGINE=InnoDB CHARSET=utf8'"`
 }
 
 func (u *User) TableName() string {

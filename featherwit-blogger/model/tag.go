@@ -6,7 +6,6 @@ type Tag struct {
 	ID          int64  `json:"id" xorm:"bigint not null pk id autoincr"`
 	Name        string `json:"name" xorm:"varchar(45) not null"`
 	SearchCount int64  `json:"searchCount" xorm:"bigint not null default 0"`
-	Charset     string `xorm:"'ENGINE=InnoDB CHARSET=utf8'"`
 }
 
 func (t *Tag) TableName() string {
