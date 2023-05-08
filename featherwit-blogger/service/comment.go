@@ -35,7 +35,6 @@ func (cs *CommentService) UpdateCommentCount(id int64, num int, s *xorm.Session)
 	}
 	mp := make(map[string]interface{})
 	mp["comment_count"] = comment.CommentCount + int64(num)
-	mp["has_child"] = true
 	i, err := s.Table(comment).Where("id = ?", id).Update(mp)
 	if err != nil {
 		log.Printf("update comment error:%v", err)
