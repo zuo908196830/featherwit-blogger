@@ -27,10 +27,14 @@
         <div class="me-reply-item" v-for="(c, index) in this.$props.comment.childrenComment" :key="index">
           <div style="font-size: 14px">
             <span class="me-reply-user">{{ c.user.nickname }}:&nbsp;&nbsp;</span>
+            <span v-if="c.replyNickname !== ''" class="me-reply-user">@{{c.replyNickname}} </span>
             <span>{{ c.comment.content }}</span>
           </div>
           <div class="me-view-meta">
             <span style="padding-right: 10px">{{ getFormatDate(c.comment.createAt) }}</span>
+            <a class="me-view-comment-tool" @click="showReplyComment(c.comment.id)">
+              <i class="me-icon-comment"></i>&nbsp;回复
+            </a>
           </div>
 
         </div>
@@ -68,6 +72,7 @@ export default {
       reply: this.getEmptyReply(),
       commentShow: false,
       open: false,
+      replyId: -1,
     }
   },
   methods: {
@@ -85,9 +90,15 @@ export default {
         content: ''
       }
     },
+    showReplyComment(replyId) {
+      this.replyId = Number(replyId)
+      this.reply = this.getEmptyReply()
+      this.commentShow = !this.commentShow
+    },
     showComment() {
       this.reply = this.getEmptyReply()
       this.commentShow = !this.commentShow
+      this.replyId = -1
     },
     publishComment() {
       if (!localStorage.getItem("loginStatus")) {
@@ -98,6 +109,7 @@ export default {
       const data = {
         blogId: Number(this.blogId),
         parentId: Number(this.comment.comment.id),
+        replyId: Number(this.replyId),
         content: this.reply.content,
       }
       axios.post('/api/comment/add', data).then(res => {
@@ -107,6 +119,7 @@ export default {
           let newChildren = {}
           newChildren.user = res.data.data.user
           newChildren.comment = res.data.data.comment
+          newChildren.replyNickname = res.data.data.replyNickname
           this.$props.comment.childrenComment.unshift(newChildren)
           this.$props.comment.childrenCount += 1
           this.open = true

@@ -27,19 +27,19 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 		Username: username,
 		BlogId:   param.BlogId,
 		ParentId: param.ParentId,
+		ReplyId:  param.ReplyId,
 		Content:  param.Content,
 	}
 	// 添加BlogId ParaentId ReplyId存在性校验
-	ok, err := BlogService.BlogExist(param.BlogId, nil)
-	if err != nil {
+	if ok, err := BlogService.BlogExist(param.BlogId, nil); err != nil {
 		response.BuildErrorResponse(err, c)
 		return
 	} else if !ok {
 		response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "blog is not exist"), c)
 		return
 	}
-	if param.ParentId >= 0 {
-		ok, err = CommentService.CommentExist(param.ParentId, nil)
+	if param.ParentId > 0 {
+		ok, err := CommentService.CommentExist(param.ParentId, nil)
 		if err != nil {
 			response.BuildErrorResponse(err, c)
 			return
@@ -48,10 +48,22 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 			return
 		}
 	}
+	replyUsername := ""
+	if param.ReplyId > 0 {
+		replyComment, err := CommentService.GetCommentById(param.ReplyId, nil)
+		if err != nil {
+			response.BuildErrorResponse(err, c)
+			return
+		} else if replyComment == nil {
+			response.BuildErrorResponse(errors.NewError(errors.ResourceNotExist, "reply comment is not exist"), c)
+			return
+		}
+		replyUsername = replyComment.Username
+	}
 	// 开始添加评论
 	session := global.DbEngine.NewSession()
 	defer session.Close()
-	err = session.Begin()
+	err := session.Begin()
 	if err != nil {
 		log.Printf("open transaction faild")
 		response.BuildErrorResponse(err, c)
@@ -65,8 +77,7 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 		return
 	}
 	//把blog和一级评论中的评论数加1
-	ok, err = BlogService.UpdateCommentCount(param.BlogId, 1, session)
-	if err != nil {
+	if ok, err := BlogService.UpdateCommentCount(param.BlogId, 1, session); err != nil {
 		session.Rollback()
 		response.BuildErrorResponse(err, c)
 		return
@@ -94,6 +105,23 @@ func (ca *CommentApi) AddComment(c *gin.Context) {
 		return
 	}
 	session.Commit()
+	if param.ReplyId > 0 {
+		if replyNickname, _, err := UserService.GetNicknameAndCover(replyUsername, nil); err != nil {
+			session.Rollback()
+			response.BuildErrorResponse(err, c)
+			return
+		} else {
+			response.BuildOkResponse(0, &response.ChildrenComment{
+				Comment: cm,
+				User: &response.UserShow{
+					Nickname: nickname,
+					Headshot: headshot,
+				},
+				ReplyNickname: replyNickname,
+			}, c)
+			return
+		}
+	}
 	response.BuildOkResponse(0, &response.CommentsTree{
 		Comment:         cm,
 		ChildrenCount:   0,

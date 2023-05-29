@@ -1,5 +1,5 @@
 <template>
-  <gvb-card class="hot_card" title="热榜" link_name="查找更多" link="/hot" top20>
+  <gvb-card class="hot_card" title="热榜" link="/hot" top20>
     <ui class="hot_ui">
       <li v-for="(blog, index) in this.hotBlogs" :key="index">
         <div class="hot_index">{{ index + 1 }}</div>

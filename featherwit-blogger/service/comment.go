@@ -139,6 +139,25 @@ func (cs *CommentService) GetCommentByParentID(parentId int64, s *xorm.Session) 
 		if err != nil {
 			return nil, err
 		}
+		mp := make(map[string]string)
+		if comments[i].ReplyId > 0 {
+			if c, err := cs.GetCommentById(comments[i].ReplyId, s); err != nil {
+				log.Printf("select comment by parentId error:%v", err)
+				return nil, err
+			} else if c != nil {
+				if replyNickname, ok := mp[c.Username]; ok {
+					res[i].ReplyNickname = replyNickname
+				} else {
+					replyNickname, _, err := UserServiceApp.GetNicknameAndCover(c.Username, s)
+					if err != nil {
+						log.Printf("select user by username error:%v", err)
+						return nil, err
+					}
+					res[i].ReplyNickname = replyNickname
+					mp[c.Username] = replyNickname
+				}
+			}
+		}
 		res[i].User = &response.UserShow{
 			Nickname: nickname,
 			Headshot: headshot,

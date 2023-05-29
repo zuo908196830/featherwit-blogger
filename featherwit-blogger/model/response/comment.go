@@ -10,8 +10,9 @@ type CommentsTree struct {
 }
 
 type ChildrenComment struct {
-	User    *UserShow      `json:"user"`
-	Comment *model.Comment `json:"comment"`
+	User          *UserShow      `json:"user"`
+	Comment       *model.Comment `json:"comment"`
+	ReplyNickname string         `json:"replyNickname"`
 }
 
 type Comments struct {
