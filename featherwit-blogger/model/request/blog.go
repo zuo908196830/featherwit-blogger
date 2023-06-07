@@ -4,6 +4,7 @@ type BlogRequest struct {
 	Title   string `json:"title" form:"title" binding:"required"`
 	Content string `json:"content" form:"content" binding:"required"`
 	Profile string `json:"profile" form:"profile"`
+	Cover   string `json:"cover" form:"cover"`
 }
 
 type Page struct {

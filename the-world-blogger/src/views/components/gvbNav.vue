@@ -57,17 +57,15 @@ export default {
   },
   methods: {
     logout() {
-      axios.get("/api/user/logout").then(res => {
-        if (res.data.code === 0) {
-          localStorage.removeItem("user")
-          axios.defaults.headers.common['Authorization'] = ""
-          this.username = ""
-          this.loginStatus = false
-          this.drawer = false
-          localStorage.setItem("loginStatus", false)
-          if (this.$route.path === "/user/data") {
-            this.$router.push('/')
-          }
+      axios.get("/api/user/logout").then(() => {
+        localStorage.removeItem("user")
+        axios.defaults.headers.common['Authorization'] = ""
+        this.username = ""
+        this.loginStatus = false
+        this.drawer = false
+        localStorage.setItem("loginStatus", false)
+        if (this.$route.path === "/user/data") {
+          this.$router.push('/')
         }
       })
     },

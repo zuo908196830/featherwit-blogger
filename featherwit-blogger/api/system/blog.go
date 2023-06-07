@@ -46,6 +46,9 @@ func (b *BlogApi) AddBlog(c *gin.Context) {
 		Profile:  param.Profile,
 		Cover:    global.GlobalConfig.DefaultBlogCover,
 	}
+	if param.Cover != "" {
+		blog.Cover = param.Cover
+	}
 	err = BlogService.AddBlog(blog, nil)
 	if err != nil {
 		response.BuildErrorResponse(err, c)
